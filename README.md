@@ -27,6 +27,25 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
 
 <!-- Installation here -->
 
+### Clone
+
+- Clone this repo to your local machine using `
+    git clone
+
+### Setup
+
+> update or install this package first
+
+```shell
+$ composer install
+```
+> or
+
+```shell
+$ composer update
+```
+
+
 ## Usage
 
 <!-- Usage here -->
