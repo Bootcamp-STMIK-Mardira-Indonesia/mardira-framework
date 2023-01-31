@@ -45,7 +45,12 @@ class CreateModelCommand extends Command
 
         $this->make($name, $table);
 
-        $output->writeln("<info>Model created successfully.</info>");
+        // text terminal yellow color
+
+        $infoText = "Model created successfully.";
+        $yellow = "\033[32m" . $infoText . "\033[0m";
+
+        $output->writeln("<info>{$yellow}</info>");
     }
 
     protected function getStub(): string
