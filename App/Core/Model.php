@@ -91,11 +91,4 @@ class Model
         $statement->bindValue(':id', $id);
         return $statement->execute();
     }
-
-    public function query(string $query)
-    {
-        $statement = $this->statement->prepare($query);
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_OBJ);
-    }
 }
