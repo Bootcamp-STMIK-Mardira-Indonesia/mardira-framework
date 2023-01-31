@@ -38,10 +38,18 @@ class CreateModelCommand extends Command
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) : void
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
+
         $name = $input->getArgument('name');
         $table = $input->getOption('table');
+
+        // if model exist
+
+        if (file_exists($this->getFilePath($this->getFileName($name)))) {
+            $output->writeln("<error>Model already exists!</error>");
+            return;
+        }
 
         $this->make($name, $table);
 
@@ -90,7 +98,7 @@ class CreateModelCommand extends Command
         return $replacements;
     }
 
-    protected function make($name, $model) : void
+    protected function make($name, $model): void
     {
         $stub = file_get_contents($this->getStub());
 
