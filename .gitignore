@@ -1,3 +1,4 @@
 .env
 .vscode
 vendor
+.gitignore
