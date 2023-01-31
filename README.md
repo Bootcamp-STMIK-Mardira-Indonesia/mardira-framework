@@ -76,3 +76,10 @@ $ php mardira make:controller ControllerName
 ```shell
 $ php mardira make:model ModelName
 ```
+
+### Create Migration
+
+```shell
+
+$ php mardira make:migration MigrationName
+```
