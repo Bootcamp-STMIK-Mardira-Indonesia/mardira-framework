@@ -20,6 +20,7 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
   - [Create Model](#create-model)
   - [Create Migration](#create-migration)
   - [Run Migration](#run-migration)
+  - [Create Seeder](#create-seeder)
 
 
 
@@ -92,3 +93,8 @@ $ php mardira make:migration MigrationName
 $ php mardira migrate
 ```
 
+### Create Seeder
+
+```shell
+$ php mardira make:seeder SeederName
+```
