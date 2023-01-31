@@ -1,0 +1,23 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyMigrationCoreNamespace;
+use DummyBlueprintNameSpace;
+use DummySchemaNameSpace;
+
+return new class extends DummyParentClass
+{
+    public function up()
+    {
+        DummySchemaClassName::create('DummyTable', function (DummyBlueprintClassName $table) {
+            $table->increment('id');
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        DummySchemaClassName::dropIfExists('DummyTable');
+    }
+};
