@@ -49,3 +49,10 @@ $ composer update
 ## Usage
 
 <!-- Usage here -->
+
+
+### Create Controller
+
+```shell
+$ php mardira make:controller ControllerName
+```
