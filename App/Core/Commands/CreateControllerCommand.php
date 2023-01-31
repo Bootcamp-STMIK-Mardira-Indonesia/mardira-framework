@@ -59,7 +59,7 @@ class CreateControllerCommand extends Command
         return file_exists($this->getFilePath($this->getFileName($name)));
     }
 
-    protected function getStub(): string
+    protected function getStub()
     {
         if (!file_exists($this->getStubPath())) {
             throw new \Exception('Stub not found');
@@ -68,22 +68,22 @@ class CreateControllerCommand extends Command
         return $this->getStubPath();
     }
 
-    protected function getStubPath(): string
+    protected function getStubPath()
     {
         return __DIR__ . '\Stubs\controller.stub';
     }
 
-    protected function getNamespace(): string
+    protected function getNamespace()
     {
         return 'App\Controllers';
     }
 
-    protected function getFileName(string $name): string
+    protected function getFileName($name)
     {
         return $name . '.php';
     }
 
-    protected function getReplacements(string $name, string $model): array
+    protected function getReplacements($name, $model)
     {
         $replacements = [
             'DummyNamespace' => $this->getNamespace(),
@@ -96,7 +96,7 @@ class CreateControllerCommand extends Command
         return $replacements;
     }
 
-    protected function make(string $name, string $model): void
+    protected function make($name, $model)
     {
         $stub = file_get_contents($this->getStub());
 
