@@ -1,0 +1,11 @@
+<?php
+
+namespace DummyNamespace;
+
+use CoreModel;
+
+class DummyClass extends DummyParentClass
+{
+    protected $table = 'DummyTable';
+    protected $primaryKey = 'DummyPrimaryKey';
+}
