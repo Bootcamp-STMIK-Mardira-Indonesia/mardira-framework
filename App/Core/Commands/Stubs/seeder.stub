@@ -1,0 +1,14 @@
+<?php
+
+namespace DummyNameSpace;
+
+use DummyCoreSeederNamespace;
+use App\Core\QueryBuilder as DB;
+
+class DummyClassName extends DummyParentClass
+{
+    public function run()
+    {
+
+    }
+}
