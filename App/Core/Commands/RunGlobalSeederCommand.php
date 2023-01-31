@@ -67,8 +67,6 @@ class RunGlobalSeederCommand extends Command
         return $globalSeeder;
     }
 
-
-
     // get file name seeder
     protected function getFileSeederName($seeder): string
     {
