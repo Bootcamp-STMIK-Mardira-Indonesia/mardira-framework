@@ -48,7 +48,17 @@ $ composer update
 
 ## Usage
 
-<!-- Usage here -->
+### Start Server
+
+```shell
+$ php mardira serve
+```
+
+> or
+
+```shell
+$ php mardira serve --port=<your_port>
+```
 
 ### Create Controller
 
