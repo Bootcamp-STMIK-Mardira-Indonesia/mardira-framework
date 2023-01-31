@@ -18,6 +18,8 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
   - [Start Server](#start-server)
   - [Create Controller](#create-controller)
   - [Create Model](#create-model)
+  - [Create Migration](#create-migration)
+  - [Run Migration](#run-migration)
 
 
 
@@ -83,3 +85,10 @@ $ php mardira make:model ModelName
 
 $ php mardira make:migration MigrationName
 ```
+
+### Run Migration
+
+```shell
+$ php mardira migrate
+```
+
