@@ -1,0 +1,19 @@
+{
+    "name": "bootcamp/jwt",
+    "description": "Membuat otentikasi dengan JWT",
+    "authors": [
+        {
+            "name": "xietsunzao",
+            "email": "lordshinjo22@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.5",
+        "firebase/php-jwt": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "App/"
+        }
+    }
+}
