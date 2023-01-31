@@ -10,5 +10,6 @@ $application = new Application();
 
 $application->add(new \App\Core\Commands\CreateControllerCommand());
 $application->add(new \App\Core\Commands\CreateModelCommand());
+$application->add(new \App\Core\Commands\ServeCommand());
 
 $application->run();
