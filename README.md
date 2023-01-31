@@ -30,7 +30,7 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
 ### Clone
 
 - Clone this repo to your local machine using `
-    git clone
+  git clone
 
 ### Setup
 
@@ -39,20 +39,25 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
 ```shell
 $ composer install
 ```
+
 > or
 
 ```shell
 $ composer update
 ```
 
-
 ## Usage
 
 <!-- Usage here -->
-
 
 ### Create Controller
 
 ```shell
 $ php mardira make:controller ControllerName
+```
+
+### Create Model
+
+```shell
+$ php mardira make:model ModelName
 ```
