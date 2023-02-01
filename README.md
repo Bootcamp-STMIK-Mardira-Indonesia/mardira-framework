@@ -22,8 +22,6 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
   - [Run Migration](#run-migration)
   - [Create Seeder](#create-seeder)
 
-
-
 ## Requirements
 
 - PHP >= 7.4
@@ -93,8 +91,32 @@ $ php mardira make:migration MigrationName
 $ php mardira migrate
 ```
 
+### Refresh Migration
+
+```shell
+$ php mardira migrate:refresh
+```
+
+### Refresh Migration With Seed
+
+```shell
+$ php mardira migrate:refresh --seed
+```
+
 ### Create Seeder
 
 ```shell
 $ php mardira make:seeder SeederName
+```
+
+### Run Seeder
+
+```shell
+$ php mardira db:seed
+```
+
+### Run Seeder Specific
+
+```shell
+$ php mardira db:seed --class=SeederName
 ```
