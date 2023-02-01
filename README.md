@@ -25,6 +25,7 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
   - [Create Seeder](#create-seeder)
   - [Run Seeder](#run-seeder)
   - [Run Seeder Specific](#run-seeder-specific)
+  - [Create .env](#create-env)
 
 
 ## Requirements
@@ -125,3 +126,16 @@ $ php mardira db:seed
 ```shell
 $ php mardira db:seed --class=SeederName
 ```
+### Create .env
+
+```shell
+$ php mardira make:env
+```
+
+## Support
+
+Reach out to me at one of the following places!
+
+- Website at <a href="https://demostmikmi.com" target="_blank">`demostmikmi.com`</a>
+
+
