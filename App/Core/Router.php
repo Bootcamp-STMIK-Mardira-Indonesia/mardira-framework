@@ -29,6 +29,13 @@ class Router
     {
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         $requestUri = $_SERVER['REQUEST_URI'];
+        $requestUri = explode('?', $requestUri)[0];
+
+        // if default routes response welcome message
+        if ($requestUri === '/') {
+            self::response(200, ['message' => 'Welcome to the Mardira Framework']);
+            return;
+        }
         foreach (self::$routes as $route) {
             if ($route['method'] === $requestMethod) {
                 $path = $route['path'];
@@ -36,6 +43,9 @@ class Router
                 $path = preg_replace('/\{[a-zA-Z0-9]+\}/', '([a-zA-Z0-9]+)', $path);
 
                 $path = '/^' . $path . '$/';
+
+
+
                 if (preg_match($path, $requestUri, $matches)) {
                     $controller = $route['controller'];
                     $function = $route['function'];
@@ -45,6 +55,6 @@ class Router
                 }
             }
         }
-        self::response(404, ['message' => 'Not found']);
+        self::response(404, ['message' => 'Not Found']);
     }
 }
