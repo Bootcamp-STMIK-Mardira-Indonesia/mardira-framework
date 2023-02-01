@@ -12,7 +12,7 @@ trait Responses
      * @param  mixed $data
      * @return void
      */
-    public static function response(int $code, array $data): void
+    public static function response(int $code, $data): void
     {
         http_response_code($code);
         header('Content-Type: application/json');
