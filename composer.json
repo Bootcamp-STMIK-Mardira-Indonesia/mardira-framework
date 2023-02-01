@@ -1,5 +1,12 @@
 {
     "name": "mardira/mardira-framework",
+    "type": "framework",
+    "license": "MIT",
+    "keywords": [
+        "framework",
+        "mardira",
+        "bootcamp"
+    ],
     "description": "Mardira Framework",
     "authors": [
         {
