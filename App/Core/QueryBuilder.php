@@ -17,60 +17,84 @@ class QueryBuilder
         $this->connection = Database::getConnection();
     }
 
-    public static function table(string $table): object
+    public static function table(string $table)
     {
         $queryBuilder = new QueryBuilder();
         $queryBuilder->table = $table;
         return $queryBuilder;
     }
 
-    public function query(string $query): object
+    public function query(string $query)
     {
         $statement = $this->connection->prepare($query);
         $statement->execute();
-        return $statement;
+        return $this->statement;
     }
 
-    public function select(string $table, array $columns = ['*']): object
+    public function select(array $columns = ['*'])
     {
         $columns = implode(', ', $columns);
-        $query = "SELECT {$columns} FROM {$table}";
+        $query = "SELECT {$columns} FROM {$this->table}";
         $statement = $this->connection->prepare($query);
         $statement->execute();
-        return $statement;
+        $this->statement = $statement;
+        return $this;
     }
 
-    public function from(string $table): object
+    public function from(string $table): QueryBuilder
     {
         $query = "SELECT * FROM {$table}";
         $statement = $this->connection->prepare($query);
         $statement->execute();
-        return $statement;
+        $this->statement = $statement;
+        return $this;
     }
 
-    public function where(string $table, string $column, string $operator, string $value): object
+    public function where(string $column,  string $value, string $operator = '='): QueryBuilder
     {
-        $query = "SELECT * FROM {$table} WHERE {$column} {$operator} :value";
+        $query = "SELECT * FROM {$this->table} WHERE {$column} {$operator} {$value}";
         $statement = $this->connection->prepare($query);
-        $statement->bindParam(':value', $value);
         $statement->execute();
-        return $statement;
+        $this->statement = $statement;
+        return $this;
     }
 
-    public function orderBy(string $table, string $column, string $order): object
+    public function whereIn(string $column, array $values): QueryBuilder
     {
-        $query = "SELECT * FROM {$table} ORDER BY {$column} {$order}";
+        $values = implode(', ', $values);
+        $query = "SELECT * FROM {$this->table} WHERE {$column} IN ({$values})";
         $statement = $this->connection->prepare($query);
         $statement->execute();
-        return $statement;
+        $this->statement = $statement;
+        return $this;
     }
 
-    public function limit(string $table, int $limit): object
+    public function whereNotIn(string $column, array $values): QueryBuilder
     {
-        $query = "SELECT * FROM {$table} LIMIT {$limit}";
+        $values = implode(', ', $values);
+        $query = "SELECT * FROM {$this->table} WHERE {$column} NOT IN ({$values})";
         $statement = $this->connection->prepare($query);
         $statement->execute();
-        return $statement;
+        $this->statement = $statement;
+        return $this;
+    }
+
+    public function orderBy(string $column, string $order = 'ASC'): QueryBuilder
+    {
+        $query = "SELECT * FROM {$this->table} ORDER BY {$column} {$order}";
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        $this->statement = $statement;
+        return $this;
+    }
+
+    public function limit(int $limit)
+    {
+        $query = "SELECT * FROM {$this->table} LIMIT {$limit}";
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        $this->statement = $statement;
+        return $this;
     }
 
     public function get(): array
@@ -78,7 +102,7 @@ class QueryBuilder
         return $this->statement->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function first(): object
+    public function first()
     {
         return $this->statement->fetch(PDO::FETCH_OBJ);
     }
@@ -155,11 +179,12 @@ class QueryBuilder
         return $statement->execute();
     }
 
-    public function join(string $joinTable, string $column, string $joinColumn): object
+    public function join(string $joinTable, string $column, string $joinColumn) : QueryBuilder
     {
         $query = "SELECT * FROM {$this->table} JOIN {$joinTable} ON {$this->table}.{$column} = {$joinTable}.{$joinColumn}";
         $statement = $this->connection->prepare($query);
         $statement->execute();
-        return $statement;
+        $this->statement = $statement;
+        return $this;
     }
 }
