@@ -6,6 +6,6 @@ use CoreModel;
 
 class DummyClass extends DummyParentClass
 {
-    protected $table = 'DummyTable';
-    protected $primaryKey = 'DummyPrimaryKey';
+    protected string $table = 'DummyTable';
+    protected string $primaryKey = 'DummyPrimaryKey';
 }
