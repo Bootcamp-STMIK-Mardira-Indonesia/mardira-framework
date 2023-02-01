@@ -48,6 +48,18 @@ class Router
                 }
             }
 
+            // if route has middleware
+            if (count($route['middleware']) > 0) {
+                foreach ($route['middleware'] as $middleware) {
+                    $middleware = new $middleware;
+                    $response = $middleware->handle(function () {
+                        return true;
+                    });
+                    if ($response !== true) {
+                        return;
+                    }
+                }
+            }
 
             if ($route['method'] === $requestMethod) {
                 $path = $route['path'];
