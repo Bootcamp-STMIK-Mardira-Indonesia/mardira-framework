@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 trait HasTokens
 {
@@ -28,13 +29,13 @@ trait HasTokens
      * @param  mixed $key
      * @return object
      */
-    public function verifyToken(string $token, string $key) : object
+    public function verifyToken(string $token, string $key)
     {
         if (strpos($token, 'Bearer') !== false) {
             $token = explode(' ', $token)[1];
         }
         $decoded = $this->decodeToken($token, $key);
-        return $decoded->data;
+        return $decoded;
     }
 
     /**
@@ -59,10 +60,11 @@ trait HasTokens
     private function decodeToken(string $token, string $key): object
     {
         try {
-            $decoded = JWT::decode($token, $key, $this->hash);
-            return $decoded;
+            return JWT::decode($token, new Key($key, $this->hash));
         } catch (\Exception $e) {
-            return $e->getMessage();
+            return (object) [
+                'error' => $e->getMessage()
+            ];
         }
     }
 }
