@@ -20,7 +20,12 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
   - [Create Model](#create-model)
   - [Create Migration](#create-migration)
   - [Run Migration](#run-migration)
+  - [Refresh Migration](#refresh-migration)
+  - [Refresh Migration With Seed](#refresh-migration-with-seed)
   - [Create Seeder](#create-seeder)
+  - [Run Seeder](#run-seeder)
+  - [Run Seeder Specific](#run-seeder-specific)
+
 
 ## Requirements
 
