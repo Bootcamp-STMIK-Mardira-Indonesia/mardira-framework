@@ -90,9 +90,9 @@ class QueryBuilder
             $values = implode(', ', array_map(function ($column) {
                 return ':' . $column;
             }, array_keys($data[0])));
-            $query = "INSERT INTO {$this->table} ({$columns}) VALUES ({$values})";
-            $statement = $this->connection->prepare($query);
             foreach ($data as $key => $value) {
+                $query = "INSERT INTO {$this->table} ({$columns}) VALUES ({$values})";
+                $statement = $this->connection->prepare($query);
                 foreach ($value as $key => $value) {
                     $statement->bindValue(':' . $key, $value);
                 }
@@ -112,6 +112,7 @@ class QueryBuilder
             return $statement->execute();
         }
     }
+
 
     public function update(array $data, string $column, string $value): bool
     {
