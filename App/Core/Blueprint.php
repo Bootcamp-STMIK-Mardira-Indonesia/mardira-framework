@@ -88,6 +88,11 @@ class Blueprint
         return $this;
     }
 
+    public function tinyIncrement(string $column): Blueprint
+    {
+        $this->columns[] = $column . ' TINYINT(4) UNSIGNED AUTO_INCREMENT PRIMARY KEY';
+        return $this;
+    }
 
     public function foreign(string $column): Blueprint
     {
