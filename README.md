@@ -8,7 +8,7 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
 
 <!-- total download repository -->
 
-![Total Downloads](https://img.shields.io/github/downloads/Bootcamp-STMIK-Mardira-Indonesia/mardira-framework/total?color=e&label=Total%20Downloads&style=flat-square)
+![Total Downloads](https://img.shields.io/packagist/dt/mardira/mardira-framework?color=e&style=for-the-badge)
 
 ## Table of Contents
 
