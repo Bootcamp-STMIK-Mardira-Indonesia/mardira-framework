@@ -10,18 +10,10 @@ class UserSeeder extends Seeder
     public function run()
     {
         $data = [
-            [
-                'name' => 'Jeffrey Way',
-                'username' => 'jeffreyway',
-                'email' => 'jeffreyway@gmail.com',
-                'password' => password_hash('password', PASSWORD_DEFAULT)
-            ],
-            [
-                'name' => 'Jeffrey Way',
-                'username' => 'jeffreyway',
-                'email' => 'jeffreyway@gmail.com',
-                'password' => password_hash('password', PASSWORD_DEFAULT),
-            ]
+            'name' => 'Administrator',
+            'username' => 'admin',
+            'email' => 'administrator@mail.com',
+            'password' => md5('admin'),
         ];
         DB::table('users')->insert($data);
     }

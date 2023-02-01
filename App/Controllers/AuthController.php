@@ -42,7 +42,7 @@ class AuthController extends Controller
             $payload = [
                 'exp' => $expiredTime,
                 'data' => [
-                    'id' => $user->user_id,
+                    'id' => $user->id,
                     'username' => $user->username,
                 ]
             ];
