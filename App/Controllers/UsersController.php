@@ -3,12 +3,15 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\QueryBuilder as DB;
 
 class UsersController extends Controller
 {
     public function index(): void
     {
-        $users = $this->model('Users')->all();
+        $users = DB::table('users')
+            ->select(['users.id', 'users.name', 'users.email', 'roles.name as role'])
+            ->join('roles', 'roles.id', 'users.role_id', 'left')->get();
         $this->response(200, $users);
     }
 
