@@ -10,8 +10,7 @@ class AuthMiddleware extends Middleware
 {
     public function handle(Closure $next)
     {
-        $user = Auth::check();
-        if ($user) {
+        if (Auth::check()) {
             return $next();
         }
         return $this->response(401, ['message' => 'Unauthorized']);
