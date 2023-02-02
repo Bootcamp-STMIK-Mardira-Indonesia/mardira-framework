@@ -14,6 +14,7 @@ class UserSeeder extends Seeder
             'username' => 'admin',
             'email' => 'administrator@mail.com',
             'password' => md5('admin'),
+            'role_id' => 1,
         ];
         DB::table('users')->insert($data);
     }
