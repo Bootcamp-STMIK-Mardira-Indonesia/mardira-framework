@@ -52,12 +52,9 @@ class Router
             if (count($route['middleware']) > 0) {
                 foreach ($route['middleware'] as $middleware) {
                     $middleware = new $middleware;
-                    $response = $middleware->handle(function () {
-                        return true;
-                    });
-                    if ($response !== true) {
+                    $middleware->handle(function () {
                         return;
-                    }
+                    });
                 }
             }
 
