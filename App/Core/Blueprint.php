@@ -51,9 +51,150 @@ class Blueprint
         return $this;
     }
 
+
+    public function mediumInteger(string $column, int $length = 8)
+    {
+        $this->columns[] = $column . ' MEDIUMINT(' . $length . ')';
+        return $this;
+    }
+
+    public function smallInteger(string $column, int $length = 6)
+    {
+        $this->columns[] = $column . ' SMALLINT(' . $length . ')';
+        return $this;
+    }
+
     public function text(string $column)
     {
         $this->columns[] = $column . ' TEXT';
+        return $this;
+    }
+
+    public function longText(string $column)
+    {
+        $this->columns[] = $column . ' LONGTEXT';
+        return $this;
+    }
+
+    public function mediumText(string $column)
+    {
+        $this->columns[] = $column . ' MEDIUMTEXT';
+        return $this;
+    }
+
+    public function tinyText(string $column)
+    {
+        $this->columns[] = $column . ' TINYTEXT';
+        return $this;
+    }
+
+    public function char(string $column, int $length = 255)
+    {
+        $this->columns[] = $column . ' CHAR(' . $length . ')';
+        return $this;
+    }
+
+    public function float(string $column, int $total = 8, int $places = 2)
+    {
+        $this->columns[] = $column . ' FLOAT(' . $total . ',' . $places . ')';
+        return $this;
+    }
+
+    public function double(string $column, int $total = 8, int $places = 2)
+    {
+        $this->columns[] = $column . ' DOUBLE(' . $total . ',' . $places . ')';
+        return $this;
+    }
+
+    public function decimal(string $column, int $total = 8, int $places = 2)
+    {
+        $this->columns[] = $column . ' DECIMAL(' . $total . ',' . $places . ')';
+        return $this;
+    }
+
+
+    public function boolean(string $column)
+    {
+        $this->columns[] = $column . ' TINYINT(1)';
+        return $this;
+    }
+
+    public function enum(string $column, array $values)
+    {
+        $this->columns[] = $column . ' ENUM(' . implode(',', $values) . ')';
+        return $this;
+    }
+
+    public function date(string $column)
+    {
+        $this->columns[] = $column . ' DATE';
+        return $this;
+    }
+
+    public function dateTime(string $column)
+    {
+        $this->columns[] = $column . ' DATETIME';
+        return $this;
+    }
+
+    public function time(string $column)
+    {
+        $this->columns[] = $column . ' TIME';
+        return $this;
+    }
+
+
+    public function timestamp(string $column)
+    {
+        $this->columns[] = $column . ' TIMESTAMP';
+        return $this;
+    }
+
+    public function binary(string $column)
+    {
+        $this->columns[] = $column . ' BINARY';
+        return $this;
+    }
+
+    public function blob(string $column)
+    {
+        $this->columns[] = $column . ' BLOB';
+        return $this;
+    }
+
+    public function longBlob(string $column)
+    {
+        $this->columns[] = $column . ' LONGBLOB';
+        return $this;
+    }
+
+    public function mediumBlob(string $column)
+    {
+        $this->columns[] = $column . ' MEDIUMBLOB';
+        return $this;
+    }
+
+    public function tinyBlob(string $column)
+    {
+        $this->columns[] = $column . ' TINYBLOB';
+        return $this;
+    }
+
+    public function json(string $column)
+    {
+        $this->columns[] = $column . ' JSON';
+        return $this;
+    }
+
+    public function jsonb(string $column)
+    {
+        $this->columns[] = $column . ' JSONB';
+        return $this;
+    }
+
+    public function year(string $column)
+    {
+        $this->columns[] = $column . ' YEAR';
         return $this;
     }
 
@@ -304,6 +445,7 @@ class Blueprint
         if ($this->unique) {
             $sql .= ', UNIQUE (' . $this->unique . ')';
         }
+
         if ($this->index) {
             $sql .= ', INDEX (' . $this->index . ')';
         }
