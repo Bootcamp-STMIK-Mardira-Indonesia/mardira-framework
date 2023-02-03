@@ -271,9 +271,16 @@ class Blueprint
         return $this;
     }
 
-    public function index(string $column): Blueprint
+    public function index($column): Blueprint
     {
+        // if multiple index requested
+        if (is_array($column)) {
+            $this->index = implode(',', $column);
+            return $this;
+        }
+
         $this->index = $column;
+
         return $this;
     }
 
@@ -447,6 +454,7 @@ class Blueprint
         }
 
         if ($this->index) {
+
             $sql .= ', INDEX (' . $this->index . ')';
         }
         $sql .= ')';
@@ -465,6 +473,9 @@ class Blueprint
         }
 
         $sql .= ';';
+
+        var_dump($sql);
+        die;
 
         return $sql;
     }
