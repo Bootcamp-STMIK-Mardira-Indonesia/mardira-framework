@@ -93,7 +93,7 @@ $ php mardira make:model ModelName
 
 ```shell
 
-$ php mardira make:migration MigrationName
+$ php mardira make:migration create_table_name_table
 ```
 
 ### Run Migration
