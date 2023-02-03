@@ -474,9 +474,6 @@ class Blueprint
 
         $sql .= ';';
 
-        var_dump($sql);
-        die;
-
         return $sql;
     }
 
