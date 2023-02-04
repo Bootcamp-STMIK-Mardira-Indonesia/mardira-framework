@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Core\Commands\RunSeederCommand;
+use App\Core\DotEnvKey;
 
 class RunMigrateRefreshCommand extends Command
 {
@@ -16,7 +17,6 @@ class RunMigrateRefreshCommand extends Command
     protected string $commandName = 'migrate:refresh';
     protected string $commandDescription = "Refresh all migrations";
 
-    // check if -seed typed in terminal or not because value is NULL
     protected string $commandOptionName = "seed"; // usage php migrate:refresh -seed
     protected string $commandOptionDescription = 'The class name of the root seeder';
 
@@ -34,6 +34,12 @@ class RunMigrateRefreshCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
+        $database = $this->getDatabaseName();
+        if (!$this->isDatabaseExists()) {
+            $output->writeln("<info>Database {$database} not exists.</info>");
+            $output->writeln("<info>Creating database {$database}...</info>");
+            $this->runCommand('migrate:database');
+        }
 
         $migrations = $this->getMigrations();
 
@@ -68,6 +74,50 @@ class RunMigrateRefreshCommand extends Command
         }
     }
 
+    protected function runCommand($command): void
+    {
+
+        $command = $this->getApplication()->find($command);
+
+        $arguments = [
+            'command' => $command,
+        ];
+
+        $input = new \Symfony\Component\Console\Input\ArrayInput($arguments);
+        $output = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $command->run($input, $output);
+    }
+
+    protected function isDatabaseExists(): bool
+    {
+        $databaseName = $this->getDatabaseName();
+
+        $statement = $this->getConnection()->prepare("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = :databaseName");
+        $statement->bindParam(':databaseName', $databaseName);
+        $statement->execute();
+
+        return $statement->rowCount() > 0;
+    }
+
+    protected function getDatabaseName(): string
+    {
+        return DotEnvKey::get('DB_NAME');
+    }
+
+    // get connection pdo
+    protected function getConnection()
+    {
+        // pdo run get connect server only unsername and password
+        $pdo = new \PDO(
+            'mysql:host=' . DotEnvKey::get('DB_HOST'),
+            DotEnvKey::get('DB_USER'),
+            DotEnvKey::get('DB_PASS')
+        );
+
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+        return $pdo;
+    }
 
     protected function getMigrations(): array
     {

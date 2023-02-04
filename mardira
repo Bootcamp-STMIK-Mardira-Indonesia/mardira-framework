@@ -16,9 +16,9 @@ $application->add(new \App\Core\Commands\CreateDotEnvCommand());
 $application->add(new \App\Core\Commands\ServeCommand());
 $application->add(new \App\Core\Commands\RunMigrateCommand());
 $application->add(new \App\Core\Commands\RunMigrateRefreshCommand());
+$application->add(new \App\Core\Commands\RunMigrateDatabaseCommand());
 $application->add(new \App\Core\Commands\RunGlobalSeederCommand());
 $application->add(new \App\Core\Commands\RunSeederCommand());
-
 
 
 $application->run();
