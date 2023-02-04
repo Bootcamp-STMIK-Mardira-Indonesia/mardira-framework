@@ -8,6 +8,8 @@ class Router
 {
     use Responses;
     private static $routes = [];
+    private static $controller = null;
+    private static $middlewares = [];
 
     public static function add(
         string $method,
@@ -25,6 +27,106 @@ class Router
         ];
     }
 
+    public static function get(string $path, $action = null, array $middlewares = []): void
+    {
+        if (is_array($action)) {
+            $controller = $action[0];
+            $function = $action[1];
+        } else {
+            $controller = self::$controller;
+            $function = $action;
+        }
+
+        if (count(self::$middlewares) > 0) {
+            $middlewares = array_merge(self::$middlewares, $middlewares);
+        }
+
+        self::add('GET', $path, $controller, $function, $middlewares);
+    }
+
+    public static function post(string $path, $action = null, array $middlewares = []): void
+    {
+        if (is_array($action)) {
+            $controller = $action[0];
+            $function = $action[1];
+        } else {
+            $controller = self::$controller;
+            $function = $action;
+        }
+
+        if (count(self::$middlewares) > 0) {
+            $middlewares = array_merge(self::$middlewares, $middlewares);
+        }
+
+        self::add('POST', $path, $controller, $function, $middlewares);
+    }
+
+    public static function put(string $path, $action = null, array $middlewares = []): void
+    {
+        if (is_array($action)) {
+            $controller = $action[0];
+            $function = $action[1];
+        } else {
+            $controller = self::$controller;
+            $function = $action;
+        }
+
+        if (count(self::$middlewares) > 0) {
+            $middlewares = array_merge(self::$middlewares, $middlewares);
+        }
+
+        self::add('PUT', $path, $controller, $function, $middlewares);
+    }
+
+
+    public static function patch(string $path, $action = null, array $middlewares = []): void
+    {
+        if (is_array($action)) {
+            $controller = $action[0];
+            $function = $action[1];
+        } else {
+            $controller = self::$controller;
+            $function = $action;
+        }
+
+        if (count(self::$middlewares) > 0) {
+            $middlewares = array_merge(self::$middlewares, $middlewares);
+        }
+
+        self::add('PATCH', $path, $controller, $function, $middlewares);
+    }
+
+    public static function delete(string $path, $action = null, array $middlewares = []): void
+    {
+        if (is_array($action)) {
+            $controller = $action[0];
+            $function = $action[1];
+        } else {
+            $controller = self::$controller;
+            $function = $action;
+        }
+
+        if (count(self::$middlewares) > 0) {
+            $middlewares = array_merge(self::$middlewares, $middlewares);
+        }
+
+        self::add('DELETE', $path, $controller, $function, $middlewares);
+    }
+
+
+
+    public static function controller(string $controller, array $middlewares = []): Router
+    {
+        self::$controller = $controller;
+        self::$middlewares = $middlewares;
+        return new self;
+    }
+
+    public function group(callable $callback): void
+    {
+        $callback();
+    }
+
     public static function run(): void
     {
         $requestMethod = $_SERVER['REQUEST_METHOD'];
@@ -40,7 +142,6 @@ class Router
         foreach (self::$routes as $route) {
 
             // if request uri same with route path
-
             if ($route['path'] === $requestUri) {
                 if ($route['method'] !== $requestMethod) {
                     self::response(405, ['message' => 'Method Not Allowed']);
@@ -48,17 +149,19 @@ class Router
                 }
             }
 
-            // if route has middleware
-            if (count($route['middleware']) > 0) {
-                foreach ($route['middleware'] as $middleware) {
-                    $middleware = new $middleware;
-                    $middleware->handle(function () {
-                        return;
-                    });
-                }
-            }
 
             if ($route['method'] === $requestMethod) {
+
+                // if route has middleware
+                if (count($route['middleware']) > 0) {
+                    foreach ($route['middleware'] as $middleware) {
+                        $middleware = new $middleware;
+                        $middleware->handle(function () {
+                            return;
+                        });
+                    }
+                }
+
                 $path = $route['path'];
                 $path = str_replace('/', '\/', $path);
                 $path = preg_replace('/\{[a-zA-Z0-9]+\}/', '([a-zA-Z0-9]+)', $path);
