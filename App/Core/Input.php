@@ -4,7 +4,7 @@ namespace App\Core;
 
 class Input
 {
-    public function get(string $key = null, $default = null)
+    public static function get(string $key = null, $default = null)
     {
         if ($key) {
             return $_GET[$key] ?? $default;
@@ -12,7 +12,7 @@ class Input
         return $_GET;
     }
 
-    public function post(string $key = null, $default = null)
+    public static function post(string $key = null, $default = null)
     {
         if ($key) {
             return $_POST[$key] ?? $default;
