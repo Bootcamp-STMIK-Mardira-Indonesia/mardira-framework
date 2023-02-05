@@ -57,10 +57,11 @@ class QueryBuilder
     {
         if (isset($this->statement->queryString)) {
             $query = $this->statement->queryString;
-            $query .= " WHERE {$column} {$operator} {$value}";
+            $query .= " WHERE {$column} {$operator} '{$value}'";
         } else {
-            $query = "SELECT * FROM {$this->table} WHERE {$column} {$operator} {$value}";
+            $query = "SELECT * FROM {$this->table} WHERE {$column} {$operator} '{$value}'";
         }
+
         $statement = $this->connection->prepare($query);
         $statement->execute();
         $this->statement = $statement;
@@ -73,9 +74,9 @@ class QueryBuilder
         $values = implode(', ', $values);
         if (isset($this->statement->queryString)) {
             $query = $this->statement->queryString;
-            $query .= " WHERE {$column} IN ({$values})";
+            $query .= " WHERE {$column} IN ('{$values}')";
         } else {
-            $query = "SELECT * FROM {$this->table} WHERE {$column} IN ({$values})";
+            $query = "SELECT * FROM {$this->table} WHERE {$column} IN ('{$values}')";
         }
         $statement = $this->connection->prepare($query);
         $statement->execute();
@@ -89,9 +90,9 @@ class QueryBuilder
         $values = implode(', ', $values);
         if (isset($this->statement->queryString)) {
             $query = $this->statement->queryString;
-            $query .= " WHERE {$column} NOT IN ({$values})";
+            $query .= " WHERE {$column} NOT IN ('{$values}')";
         } else {
-            $query = "SELECT * FROM {$this->table} WHERE {$column} NOT IN ({$values})";
+            $query = "SELECT * FROM {$this->table} WHERE {$column} NOT IN ('{$values}')";
         }
         $statement = $this->connection->prepare($query);
         $statement->execute();
