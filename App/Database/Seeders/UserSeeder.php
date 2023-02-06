@@ -12,8 +12,8 @@ class UserSeeder extends Seeder
         $data = [
             'name' => 'Administrator',
             'username' => 'admin',
-            'email' => 'administrator@mail.com',
-            'password' => md5('admin'),
+            'email' => 'admin@admin.com',
+            'password' => password_hash('password', PASSWORD_DEFAULT),
             'role_id' => 1,
         ];
         DB::table('users')->insert($data);
