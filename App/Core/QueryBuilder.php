@@ -69,6 +69,21 @@ class QueryBuilder
         return $this;
     }
 
+    public function orWhere(string $column, string $value, string $operator = '='): QueryBuilder
+    {
+        if (isset($this->statement->queryString)) {
+            $query = $this->statement->queryString;
+            $query .= " OR {$column} {$operator} '{$value}'";
+        } else {
+            $query = "SELECT * FROM {$this->table} OR {$column} {$operator} '{$value}'";
+        }
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        $this->statement = $statement;
+        $this->buildQuery();
+        return $this;
+    }
+
     public function whereIn(string $column, array $values): QueryBuilder
     {
         $values = implode(', ', $values);
