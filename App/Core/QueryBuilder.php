@@ -21,6 +21,11 @@ class QueryBuilder
     {
         $queryBuilder = new QueryBuilder();
         $queryBuilder->table = $table;
+        $query = "SELECT * FROM {$table}";
+        $statement = $queryBuilder->connection->prepare($query);
+        $statement->execute();
+        $queryBuilder->statement = $statement;
+        $queryBuilder->buildQuery();
         return $queryBuilder;
     }
 
