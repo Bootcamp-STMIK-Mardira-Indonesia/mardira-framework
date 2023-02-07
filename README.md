@@ -26,6 +26,8 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
   - [Run Seeder](#run-seeder)
   - [Run Seeder Specific](#run-seeder-specific)
   - [Create .env](#create-env)
+  - [Create Authetication](#create-authetication)
+  - [Refresh Authetication](#refresh-authetication)
 
 ## Requirements
 
@@ -136,6 +138,18 @@ $ php mardira db:seed --class=SeederName
 
 ```shell
 $ php mardira make:env
+```
+
+### Create Authetication
+
+```shell
+$ php mardira make:auth
+```
+
+### Refresh Authetication
+
+```shell
+$ php mardira make:auth --refresh
 ```
 
 ## Support
