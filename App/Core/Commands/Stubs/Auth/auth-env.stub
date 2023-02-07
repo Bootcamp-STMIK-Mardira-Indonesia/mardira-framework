@@ -1,0 +1,4 @@
+
+
+# Token Expired Configuration in minutes
+EXPIRED_TOKEN=60

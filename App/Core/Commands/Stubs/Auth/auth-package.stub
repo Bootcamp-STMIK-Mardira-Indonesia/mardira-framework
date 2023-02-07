@@ -1,0 +1,175 @@
+<?php
+
+namespace App\Packages;
+
+use App\Core\Request;
+use App\Core\HasTokens;
+use App\Core\DotEnvKey;
+use App\Core\QueryBuilder as DB;
+use App\Core\Validator;
+use App\Helpers\TimeHelper;
+use App\Core\Responses;
+
+class Auth
+{
+    use HasTokens;
+    use Responses;
+
+    protected ?string $token = null;
+
+    private static function verify(string $token)
+    {
+        $user = (new self)->verifyToken($token, DotEnvKey::get('ACCESS_TOKEN_SECRET_KEY'));
+        if (isset($user->data)) {
+            return $user->data;
+        }
+        return false;
+    }
+
+    public static function check(): bool
+    {
+        $token = Request::bearerToken();
+        $user = self::verify($token);
+        if ($user) {
+            $user = DB::table('users')->where('id', $user->id)->first();
+            if ($user) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function user()
+    {
+        $token = Request::bearerToken();
+        $user = self::verify($token);
+        if ($user) {
+            $user = DB::table('users')->where('id', $user->id)->first();
+            if ($user) {
+                return $user;
+            }
+        }
+        return false;
+    }
+
+    public static function attempt(array $credentials = [], $validator = null)
+    {
+        //   if validation fails
+        if ($validator) {
+            if ($validator->fails()) {
+                self::response(401, [
+                    'message' => 'Invalid credentials',
+                    'errors' => $validator->errors()
+                ]);
+            }
+        }
+
+        // validate form via validator
+        if (self::validate($credentials)) {
+            $user = DB::table('users');
+            $field = isset($credentials['email']) ? 'email' : 'username';
+            $user = $user->where($field, isset($credentials['email']) ? $credentials['email'] : $credentials['username']);
+            $user = $user->first();
+
+            if ($user) {
+                if (password_verify($credentials['password'], $user->password)) {
+                    $token = (new self)->generateToken([
+                        'data' => [
+                            'id' => $user->id,
+                            'username' => $user->username,
+                            'email' => $user->email,
+                            'created_at' => $user->created_at,
+                            'updated_at' => $user->updated_at,
+                            'expires_at' => TimeHelper::setMinutes(30)
+                        ]
+                    ], DotEnvKey::get('ACCESS_TOKEN_SECRET_KEY'));
+                    self::response(200, [
+                        'message' => 'Login successful',
+                        'token' => $token,
+                        'expires_at' => date('Y-m-d H:i:s', TimeHelper::setMinutes(30))
+                    ]);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static function register(array $credentials = [])
+    {
+        // validate form via validator
+        if (self::validate($credentials)) {
+            $user = DB::table('users');
+            $field = isset($credentials['email']) ? 'email' : 'username';
+            $user = $user->where($field, isset($credentials['email']) ? $credentials['email'] : $credentials['username']);
+            $user = $user->first();
+
+            if (!$user) {
+                $credentials['password'] = password_hash($credentials['password'], PASSWORD_DEFAULT);
+                $insert = DB::table('users')->insert($credentials);
+                $user = DB::table('users')->where('id', $insert)->first();
+                if ($user) {
+                    $token = (new self)->generateToken([
+                        'data' => [
+                            'id' => $user->id,
+                            'username' => $user->username,
+                            'email' => $user->email,
+                            'created_at' => $user->created_at,
+                            'updated_at' => $user->updated_at,
+                            'expires_at' => TimeHelper::setMinutes(30)
+                        ]
+                    ], DotEnvKey::get('ACCESS_TOKEN_SECRET_KEY'));
+                    self::response(200, [
+                        'message' => 'Register successful',
+                        'token' => $token,
+                        'expires_at' => date('Y-m-d H:i:s', TimeHelper::setMinutes(30))
+                    ]);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public static function validate(array $credentials = [])
+    {
+        // foreach validate required each credentials
+        $fields = [];
+
+        foreach ($credentials as $key => $value) {
+
+            // if key email use validate email
+            if ($key == 'email') {
+                $fieldset = [
+                    'required' => true,
+                    'email' => true
+                ];
+                $fields[] = [
+                    $key => $fieldset
+                ];
+                continue;
+            }
+
+            $fieldset = [
+                'required' => true,
+            ];
+
+            $fields[] = [
+                $key => $fieldset
+            ];
+        }
+
+        $fields = array_merge(...$fields);
+        $validator = Validator::validate($fields, $credentials);
+
+        if ($validator->fails()) {
+            self::response(400, [
+                'message' => 'Failed',
+                'errors' => $validator->errors()
+            ]);
+            return;
+        }
+        return true;
+    }
+}
