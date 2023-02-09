@@ -152,26 +152,31 @@ class Router
 
             if ($route['method'] === $requestMethod) {
 
-                // if route has middleware
-                if (count($route['middleware']) > 0) {
-                    foreach ($route['middleware'] as $middleware) {
-                        $middleware = new $middleware;
-                        $middleware->handle(function () {
-                            return;
-                        });
-                    }
-                }
-
                 $path = $route['path'];
                 $path = str_replace('/', '\/', $path);
                 $path = preg_replace('/\{[a-zA-Z0-9]+\}/', '([a-zA-Z0-9]+)', $path);
-
                 $path = '/^' . $path . '$/';
-                if (preg_match($path, $requestUri, $matches)) {
-                    $controller = $route['controller'];
-                    $function = $route['function'];
-                    $controller = new $controller;
-                    $controller->$function(...array_slice($matches, 1));
+                try {
+                    if (preg_match($path, $requestUri, $matches)) {
+
+                        // if route has middleware
+                        if (count($route['middleware']) > 0) {
+                            foreach ($route['middleware'] as $middleware) {
+                                $middleware = new $middleware;
+                                $middleware->handle(function () {
+                                    return;
+                                });
+                            }
+                        }
+
+                        $controller = $route['controller'];
+                        $function = $route['function'];
+                        $controller = new $controller;
+                        $controller->$function(...array_slice($matches, 1));
+                        return;
+                    }
+                } catch (\Throwable $th) {
+                    self::response(500, ['message' => $th->getMessage()]);
                     return;
                 }
             }
