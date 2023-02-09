@@ -50,19 +50,19 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
 > Create your project first
 
 ```shell
-$ composer create-project mardira/mardira-framework <your_project_name>
+composer create-project mardira/mardira-framework <your_project_name>
 ```
 
 > update or install this package with composer
 
 ```shell
-$ composer install
+composer install
 ```
 
 > or
 
 ```shell
-$ composer update
+composer update
 ```
 
 ## Usage
@@ -70,86 +70,86 @@ $ composer update
 ### Start Server
 
 ```shell
-$ php mardira serve
+php mardira serve
 ```
 
 > or
 
 ```shell
-$ php mardira serve --port=<your_port>
+php mardira serve --port=<your_port>
 ```
 
 ### Create Controller
 
 ```shell
-$ php mardira make:controller ControllerName
+php mardira make:controller ControllerName
 ```
 
 ### Create Model
 
 ```shell
-$ php mardira make:model ModelName
+php mardira make:model ModelName
 ```
 
 ### Create Migration
 
 ```shell
 
-$ php mardira make:migration create_table_table_name
+php mardira make:migration create_table_table_name
 ```
 
 ### Run Migration
 
 ```shell
-$ php mardira migrate
+php mardira migrate
 ```
 
 ### Refresh Migration
 
 ```shell
-$ php mardira migrate:refresh
+php mardira migrate:refresh
 ```
 
 ### Refresh Migration With Seed
 
 ```shell
-$ php mardira migrate:refresh --seed
+php mardira migrate:refresh --seed
 ```
 
 ### Create Seeder
 
 ```shell
-$ php mardira make:seeder SeederName
+php mardira make:seeder SeederName
 ```
 
 ### Run Seeder
 
 ```shell
-$ php mardira db:seed
+php mardira db:seed
 ```
 
 ### Run Seeder Specific
 
 ```shell
-$ php mardira db:seed --class=SeederName
+php mardira db:seed --class=SeederName
 ```
 
 ### Create .env
 
 ```shell
-$ php mardira make:env
+php mardira make:env
 ```
 
 ### Create Authetication
 
 ```shell
-$ php mardira make:auth
+php mardira make:auth
 ```
 
 ### Refresh Authetication
 
 ```shell
-$ php mardira make:auth --refresh
+php mardira make:auth --refresh
 ```
 
 ## Support
