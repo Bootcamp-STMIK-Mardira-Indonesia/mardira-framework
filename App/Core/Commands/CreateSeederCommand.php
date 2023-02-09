@@ -48,7 +48,7 @@ class CreateSeederCommand extends Command
 
     protected function getStubPath(): string
     {
-        return __DIR__ . '\Stubs\seeder.stub';
+        return __DIR__ . '/Stubs/seeder.stub';
     }
 
     protected function getDestinationPath(): string

@@ -48,7 +48,7 @@ class CreateDotEnvCommand extends Command
 
     protected function getStubPath()
     {
-        return __DIR__ . '\Stubs\env.stub';
+        return __DIR__ . '/Stubs/env.stub';
     }
 
     protected function getFileName($name)

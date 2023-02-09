@@ -60,7 +60,7 @@ class CreateMigrationCommand extends Command
 
     protected function getStubPath(): string
     {
-        return __DIR__ . '\Stubs\migration.stub';
+        return __DIR__ . '/Stubs/migration.stub';
     }
 
     protected function getDestinationPath(): string

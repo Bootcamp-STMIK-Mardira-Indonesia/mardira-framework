@@ -70,7 +70,7 @@ class CreateControllerCommand extends Command
 
     protected function getStubPath()
     {
-        return __DIR__ . '\Stubs\controller.stub';
+        return __DIR__ . '/Stubs/controller.stub';
     }
 
     protected function getNamespace()
