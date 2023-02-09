@@ -42,18 +42,14 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
 
 ### Clone
 
-- Clone this repo to your local machine using `
-  git clone
+- Clone this repo to your local machine using `git clone
 
-### Setup
-
-> Create your project first
-
-```shell
-composer create-project mardira/mardira-framework <your_project_name>
+``` shell
+  git clone https://github.com/Bootcamp-STMIK-Mardira-Indonesia/mardira-framework.git
 ```
 
-> update or install this package with composer
+
+> Then, install the dependencies using composer
 
 ```shell
 composer install
@@ -63,6 +59,14 @@ composer install
 
 ```shell
 composer update
+```
+
+### Setup
+
+> You can create a new project using composer
+
+```shell
+composer create-project mardira/mardira-framework <your_project_name>
 ```
 
 ## Usage
