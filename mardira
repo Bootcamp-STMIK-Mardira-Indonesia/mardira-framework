@@ -14,6 +14,7 @@ $application->add(new \App\Core\Commands\CreateMigrationCommand());
 $application->add(new \App\Core\Commands\CreateSeederCommand());
 $application->add(new \App\Core\Commands\CreateDotEnvCommand());
 $application->add(new \App\Core\Commands\CreateAuthCommand());
+$application->add(new \App\Core\Commands\CreateMiddlewareCommand());
 $application->add(new \App\Core\Commands\ServeCommand());
 $application->add(new \App\Core\Commands\RunMigrateCommand());
 $application->add(new \App\Core\Commands\RunMigrateRefreshCommand());
