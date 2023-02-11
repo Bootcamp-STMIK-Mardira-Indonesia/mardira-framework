@@ -1,0 +1,14 @@
+<?php
+
+namespace DummyNamespace;
+
+use Closure;
+use CoreMiddleware;
+
+class DummyClass extends DummyParentClass
+{
+    public function handle(Closure $next)
+    {
+        return $next();
+    }
+}
