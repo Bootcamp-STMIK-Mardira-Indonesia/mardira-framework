@@ -100,7 +100,7 @@ class CreateUpdateCommand extends Command
         exec($command);
 
         // move new core folder
-        $command = "mv vendor/mardira/mardira-framework/App/Core .";
+        $command = "mv vendor/mardira/mardira-framework/App/Core App";
 
         exec($command);
 
