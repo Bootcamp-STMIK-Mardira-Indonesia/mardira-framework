@@ -228,8 +228,11 @@ class QueryBuilder
     {
         $joinType = $joinType ? strtoupper($joinType) . ' JOIN' : 'JOIN';
 
+
+        // if join multiple tables
         if (isset($this->statement->queryString)) {
-            $query = "{$this->statement->queryString} {$joinType} {$joinTable} ON {$column} = {$joinColumn}";
+            $query = $this->statement->queryString;
+            $query .= " {$joinType} {$joinTable} ON {$column} = {$joinColumn}";
         } else {
             $query = "SELECT * FROM {$this->table} {$joinType} {$joinTable} ON {$column} = {$joinColumn}";
         }
