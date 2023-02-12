@@ -192,37 +192,28 @@ class QueryBuilder
     }
 
 
-    public function update(array $data, string $column, string $value): bool
+    public function update(array $data): bool
     {
-        // check if multiple rows are to be updated
-        if (isset($data[0])) {
-            $columns = implode(', ', array_keys($data[0]));
-            $values = implode(', ', array_map(function ($column) {
-                return ':' . $column;
-            }, array_keys($data[0])));
-            $query = "UPDATE {$this->table} SET {$columns} WHERE {$column} = :value";
-            $statement = $this->connection->prepare($query);
-            foreach ($data as $key => $value) {
-                foreach ($value as $key => $value) {
-                    $statement->bindValue(':' . $key, $value);
-                }
-                $statement->bindValue(':value', $value);
-                $statement->execute();
-            }
-            return true;
-        } else {
-            $columns = implode(', ', array_keys($data));
-            $values = implode(', ', array_map(function ($column) {
-                return ':' . $column;
-            }, array_keys($data)));
-            $query = "UPDATE {$this->table} SET {$columns} WHERE {$column} = :value";
-            $statement = $this->connection->prepare($query);
-            foreach ($data as $key => $value) {
-                $statement->bindValue(':' . $key, $value);
-            }
-            $statement->bindValue(':value', $value);
-            return $statement->execute();
+        $sql = $this->statement->queryString;
+        // split select * from and where
+        $query = "UPDATE {$this->table} SET ";
+
+        foreach ($data as $key => $value) {
+            $query .= "{$key} = :{$key}, ";
         }
+
+        $query = rtrim($query, ', ');
+
+        $where = substr($sql, strpos($sql, 'WHERE'));
+        $query .= " {$where}";
+
+        $statement = $this->connection->prepare($query);
+
+        foreach ($data as $key => $value) {
+            $statement->bindValue(':' . $key, $value);
+        }
+
+        return $statement->execute();
     }
 
     public function delete(string $column, string $value): bool
