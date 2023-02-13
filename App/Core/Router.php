@@ -176,7 +176,12 @@ class Router
                         return;
                     }
                 } catch (\Throwable $th) {
-                    self::response(500, ['message' => $th->getMessage()]);
+                    self::response(500, [
+                        'message' => $th->getMessage(),
+                        'file' => $th->getFile(),
+                        'line' => $th->getLine(),
+                        'trace' => $th->getTrace(),
+                    ]);
                     return;
                 }
             }
