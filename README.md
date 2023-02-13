@@ -83,6 +83,15 @@ php mardira serve
 php mardira serve --port=<your_port>
 ```
 
+### Create .env
+
+> You can create .env file using command
+
+```shell
+php mardira make:env
+```
+
+
 ### Create Controller
 
 ```shell
@@ -103,6 +112,7 @@ php mardira make:migration create_table_table_name
 ```
 
 ### Run Migration
+> If database not exist, will automatically create database from .env
 
 ```shell
 php mardira migrate
@@ -115,6 +125,7 @@ php mardira migrate:refresh
 ```
 
 ### Refresh Migration With Seed
+
 
 ```shell
 php mardira migrate:refresh --seed
@@ -136,12 +147,6 @@ php mardira db:seed
 
 ```shell
 php mardira db:seed --class=SeederName
-```
-
-### Create .env
-
-```shell
-php mardira make:env
 ```
 
 ### Create Authetication
