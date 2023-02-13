@@ -16,6 +16,7 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
 - [Installation](#installation)
 - [Usage](#usage)
   - [Start Server](#start-server)
+  - [Create .env](#create-env)
   - [Create Controller](#create-controller)
   - [Create Model](#create-model)
   - [Create Migration](#create-migration)
@@ -25,9 +26,9 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
   - [Create Seeder](#create-seeder)
   - [Run Seeder](#run-seeder)
   - [Run Seeder Specific](#run-seeder-specific)
-  - [Create .env](#create-env)
   - [Create Authetication](#create-authetication)
   - [Refresh Authetication](#refresh-authetication)
+  - [Update Framework Version](#update-framework-version)
 
 ## Requirements
 
@@ -44,10 +45,9 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
 
 - Clone this repo to your local machine using `git clone
 
-``` shell
+```shell
   git clone https://github.com/Bootcamp-STMIK-Mardira-Indonesia/mardira-framework.git
 ```
-
 
 > Then, install the dependencies using composer
 
@@ -91,7 +91,6 @@ php mardira serve --port=<your_port>
 php mardira make:env
 ```
 
-
 ### Create Controller
 
 ```shell
@@ -112,6 +111,7 @@ php mardira make:migration create_table_table_name
 ```
 
 ### Run Migration
+
 > If database not exist, will automatically create database from .env
 
 ```shell
@@ -125,7 +125,6 @@ php mardira migrate:refresh
 ```
 
 ### Refresh Migration With Seed
-
 
 ```shell
 php mardira migrate:refresh --seed
@@ -159,6 +158,12 @@ php mardira make:auth
 
 ```shell
 php mardira make:auth --refresh
+```
+
+### Update Framework Version
+
+```shell
+php mardira update
 ```
 
 ## Support
