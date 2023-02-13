@@ -37,4 +37,12 @@ class Input
         }
         return $headers;
     }
+
+    public static function file(string $key = null, $default = null)
+    {
+        if ($key) {
+            return $_FILES[$key] ?? $default;
+        }
+        return $_FILES;
+    }
 }
