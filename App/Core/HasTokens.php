@@ -5,6 +5,9 @@ namespace App\Core;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
+// set jakarta timezone
+date_default_timezone_set('Asia/Jakarta');
+
 trait HasTokens
 {
     protected string $hash = 'HS256';
