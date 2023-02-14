@@ -35,4 +35,13 @@ class AuthController extends Controller
             'message' => 'User already exists'
         ]);
     }
+
+    public function logout() : void
+    {
+        Auth::logout();
+
+        $this->response(401, [
+            'message' => 'Invalid credentials'
+        ]);
+    }
 }

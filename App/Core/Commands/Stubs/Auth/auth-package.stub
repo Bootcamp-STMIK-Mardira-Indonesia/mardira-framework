@@ -172,4 +172,32 @@ class Auth
         }
         return true;
     }
+
+    public static function logout()
+    {
+        $token = Request::bearerToken();
+        $user = self::verify($token);
+        if ($user) {
+            $user = DB::table('users')->where('id', $user->id)->first();
+            if ($user) {
+                $token = (new self)->generateToken([
+                    'data' => [
+                        'id' => $user->id,
+                        'username' => $user->username,
+                        'email' => $user->email,
+                        'created_at' => $user->created_at,
+                        'updated_at' => $user->updated_at,
+                        'expires_at' => TimeHelper::setMinutes(30)
+                    ]
+                ], DotEnvKey::get('ACCESS_TOKEN_SECRET_KEY'));
+                self::response(200, [
+                    'message' => 'Logout successful',
+                    'token' => $token,
+                    'expires_at' => date('Y-m-d H:i:s', TimeHelper::setMinutes(30))
+                ]);
+                return true;
+            }
+        }
+        return false;
+    }
 }
