@@ -25,4 +25,10 @@ class TimeHelper
     {
         return time() + ($hours * 60 * 60);
     }
+
+
+    public static function setDays(int $days): int
+    {
+        return time() + ($days * 60 * 60 * 24);
+    }
 }
