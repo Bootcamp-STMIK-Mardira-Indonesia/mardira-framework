@@ -23,6 +23,7 @@ class QueryBuilder
         $this->connection = Database::getConnection();
     }
 
+
     public static function table(string $table): QueryBuilder
     {
         $queryBuilder = new QueryBuilder();
@@ -128,6 +129,12 @@ class QueryBuilder
         return $this->orderBy($column, 'DESC');
     }
 
+    public function sum(string $column, string $alias): QueryBuilder
+    {
+        $this->columns[] = "SUM({$column}) AS {$alias}";
+        return $this;
+    }
+
     public function join(string $table, string $first, string $second, string $type = ''): QueryBuilder
     {
         $this->joins[] = [
@@ -176,10 +183,10 @@ class QueryBuilder
         }
     }
 
+
     public function get(): array
     {
         $query = $this->buildQuery();
-
         $this->statement = $this->connection->prepare($query);
         $this->bindValues();
         $this->statement->execute();
@@ -195,29 +202,36 @@ class QueryBuilder
         return $this->statement->fetch(PDO::FETCH_OBJ);
     }
 
+    public function count(): int
+    {
+        $query = $this->buildQuery();
+        $this->statement = $this->connection->prepare($query);
+        $this->bindValues();
+        $this->statement->execute();
+        return $this->statement->rowCount();
+    }
+
+
     public function update(array $data): bool
     {
-        $sql = $this->statement->queryString;
-        // split select * from and where
+
         $query = "UPDATE {$this->table} SET ";
-
-        foreach ($data as $key => $value) {
-            $query .= "{$key} = :{$key}, ";
-        }
-
-        $query = rtrim($query, ', ');
-
+        $query .= implode(', ', array_map(function ($column) {
+            return $column . ' = :' . $column;
+        }, array_keys($data)));
+        // split select query
+        $sql = $this->buildQuery();
         $where = substr($sql, strpos($sql, 'WHERE'));
-        $query .= " {$where}";
-
-        $statement = $this->connection->prepare($query);
-
+        $query .= ' ' . $where;
+        $this->statement = $this->connection->prepare($query);
         foreach ($data as $key => $value) {
-            $statement->bindValue(':' . $key, $value);
+            $this->statement->bindValue(':' . $key, $value);
         }
-
-        return $statement->execute();
+        $this->bindValues();
+        return $this->statement->execute();
     }
+
+
 
     public function buildQuery(): string
     {
