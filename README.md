@@ -37,6 +37,30 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
 - Apache >= 2.4.41
 - Composer >= 2.0.9
 
+## Structure Folders
+
+```shell
+mardira-framework
+├── App
+│   ├── Controllers
+│   │   ├── AuthController.php
+│   ├── Core
+│   │   ├── Commands
+│   ├── Database
+│   │   ├── Migrations
+│   │   │   ├── 2023_01_31_xxxxxx_create_table_users.php
+│   │   │   ├── 2023_01_31_xxxxxx_create_table_roles.php
+│   │   ├── Seeders
+│   │   │   ├── GlobalSeeder.php
+│   ├── Helpers
+│   ├── Middleware
+│   ├── Models
+│   ├── Packages
+│   ├── Routes
+│   │   ├── Api.php
+```
+
+
 ## Installation
 
 <!-- Installation here -->
