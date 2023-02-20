@@ -280,8 +280,21 @@ class Upload
             $this->name = $this->newName . '.' . $this->extension;
         }
 
-        if (!move_uploaded_file($this->file['tmp_name'], $this->path . $this->name)) {
-            throw new \Exception('Error moving file');
+        // check if tmp_name directory exists
+        if (!file_exists($this->file['tmp_name'])) {
+            throw new \Exception('File not found');
+        }
+
+        // upload file from cross server
+        if (is_uploaded_file($this->file['tmp_name'])) {
+            if (!move_uploaded_file($this->file['tmp_name'], $this->path . $this->name)) {
+                throw new \Exception('Error moving file');
+            }
+        }   // upload file from same server
+        else {
+            if (!rename($this->file['tmp_name'], $this->path . $this->name)) {
+                throw new \Exception('Error moving file');
+            }
         }
 
         $this->isMoved = true;
@@ -309,5 +322,4 @@ class Upload
         $this->isImage = getimagesize($this->file['tmp_name']) !== false;
         return $this;
     }
-
 }
