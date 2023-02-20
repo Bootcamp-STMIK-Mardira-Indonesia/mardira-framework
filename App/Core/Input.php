@@ -6,6 +6,10 @@ class Input
 {
     public static function get(string $key = null, $default = null)
     {
+        if (count($_GET) === 0) {
+            parse_str(file_get_contents('php://input'), $_GET);
+        }
+
         if ($key) {
             return $_GET[$key] ?? $default;
         }
@@ -14,6 +18,11 @@ class Input
 
     public static function post(string $key = null, $default = null)
     {
+
+        if (count($_POST) === 0) {
+            parse_str(file_get_contents('php://input'), $_POST);
+        }
+
         if ($key) {
             return $_POST[$key] ?? $default;
         }
@@ -40,6 +49,10 @@ class Input
 
     public static function file(string $key = null, $default = null)
     {
+        if (count($_FILES) === 0) {
+            parse_str(file_get_contents('php://input'), $_FILES);
+        }
+
         if ($key) {
             return $_FILES[$key] ?? $default;
         }
