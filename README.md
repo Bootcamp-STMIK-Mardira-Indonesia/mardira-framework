@@ -6,9 +6,12 @@
 
 Mardira Framework is a PHP framework Model Controller Based for building web applications and APIs. It is designed to be simple, and fast.
 
-<!-- total download repository -->
 
 ![Total Downloads](https://img.shields.io/packagist/dt/mardira/mardira-framework?color=e&style=for-the-badge)
+![Total Stars](https://img.shields.io/github/stars/Bootcamp-STMIK-Mardira-Indonesia/mardira-framework?color=e&style=for-the-badge)
+![Total Forks](https://img.shields.io/github/forks/Bootcamp-STMIK-Mardira-Indonesia/mardira-framework?color=e&style=for-the-badge)
+![Version](https://img.shields.io/packagist/v/mardira/mardira-framework?color=e&style=for-the-badge)
+![License](https://img.shields.io/github/license/Bootcamp-STMIK-Mardira-Indonesia/mardira-framework?color=e&style=for-the-badge)
 
 ## Table of Contents
 
@@ -60,7 +63,6 @@ mardira-framework
 │   ├── Routes
 │   │   ├── Api.php
 ```
-
 
 ## Installation
 
