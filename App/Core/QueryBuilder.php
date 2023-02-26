@@ -17,6 +17,7 @@ class QueryBuilder
     protected array $where = [];
     protected array $order = [];
     protected int $limit = 0;
+    protected array $groupBy = [];
 
     public function __construct()
     {
@@ -129,11 +130,36 @@ class QueryBuilder
         return $this->orderBy($column, 'DESC');
     }
 
+    public function groupBy(string $column): QueryBuilder
+    {
+        $this->groupBy[] = $column;
+        return $this;
+    }
+
     public function sum(string $column, string $alias): QueryBuilder
     {
         $this->columns[] = "SUM({$column}) AS {$alias}";
         return $this;
     }
+
+    public function avg(string $column, string $alias): QueryBuilder
+    {
+        $this->columns[] = "AVG({$column}) AS {$alias}";
+        return $this;
+    }
+
+    public function min(string $column, string $alias): QueryBuilder
+    {
+        $this->columns[] = "MIN({$column}) AS {$alias}";
+        return $this;
+    }
+
+    public function max(string $column, string $alias): QueryBuilder
+    {
+        $this->columns[] = "MAX({$column}) AS {$alias}";
+        return $this;
+    }
+
 
     public function join(string $table, string $first, string $second, string $type = ''): QueryBuilder
     {
@@ -296,6 +322,10 @@ class QueryBuilder
             }
         }
 
+        if (count($this->groupBy) > 0) {
+            $query .= " GROUP BY " . implode(', ', $this->groupBy);
+        }
+
         if ($this->limit > 0) {
             $query .= " LIMIT {$this->limit}";
         }
@@ -340,4 +370,6 @@ class QueryBuilder
         $statement->bindValue(':value', $value);
         return $statement->execute();
     }
+
+
 }
