@@ -1,6 +1,7 @@
 <!-- write title Mardira Framework -->
 
-# Mardira Framework
+<p align="center"><a href="https://demostmikmi.com" target="_blank"><img src="https://raw.githubusercontent.com/Bootcamp-STMIK-Mardira-Indonesia/mardira-framework/master/public/logo.png" width="150" alt="Mardira Logo"></a></p>
+
 
 <!-- Description here -->
 
