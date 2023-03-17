@@ -36,6 +36,9 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
   - [Model](#model)
   - [Migration](#migration)
   - [Seeder](#seeder)
+  - [Middleware](#middleware)
+  - [Route](#route)
+    - [Route Group](#route-group)
 
 ## Requirements
 
@@ -367,6 +370,67 @@ class UserSeeder extends Seeder
 
 ```
 
+### Middleware
+
+> Create middleware use `php mardira make:middleware MiddlewareName`, here is example middleware
+
+```php
+<?php
+
+namespace App\Middleware;
+
+use App\Core\Middleware;
+use App\Core\Auth;
+
+class AuthMiddleware extends Middleware
+{
+    public function handle()
+    {
+        if (Auth::check()) {
+            return $next();
+        }
+        return $this->response(401, ['message' => 'Unauthorized']);
+    }
+}
+```
+> to use middleware, you can add middleware in route
+
+```php
+
+Router::get('/schedules', [ScheduleController::class, 'index'], [AuthMiddleware::class]);
+
+```
+
+### Routing
+
+> You can add route in `App/Routes/Api.php`
+
+```php
+
+<?php
+
+use App\Core\Route;
+
+Router::get('/home', [HomeController::class, 'index']);
+
+```
+
+#### Route Group
+
+> You can add route group in `App/Routes/Api.php`
+
+```php
+
+<?php
+
+use App\Core\Route;
+
+
+Router::controller(ProductController::class)->group(function () {
+    Router::post('/products/store', 'store');
+});
+
+```
 
 
 ## Support
