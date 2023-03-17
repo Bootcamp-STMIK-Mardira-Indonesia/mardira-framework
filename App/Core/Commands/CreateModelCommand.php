@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Doctrine\Inflector\InflectorFactory;
 
 class CreateModelCommand extends Command
 {
@@ -80,6 +81,12 @@ class CreateModelCommand extends Command
         return 'App\Models';
     }
 
+    protected function pluralize(string $name): string
+    {
+        $inflector = InflectorFactory::create()->build();
+        return $inflector->pluralize($name);
+    }
+
     protected function getFileName(string $name): string
     {
         return $name . '.php';
@@ -92,7 +99,7 @@ class CreateModelCommand extends Command
             'CoreModel' => 'App\Core\Model',
             'DummyClass' => $name,
             'DummyParentClass' => 'Model',
-            'DummyTable' => $table ?? strtolower($name) . 's',
+            'DummyTable' => $table ?? strtolower($this->pluralize($name)),
             'DummyPrimaryKey' => 'id',
         ];
         return $replacements;
