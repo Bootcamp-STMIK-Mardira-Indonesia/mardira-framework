@@ -34,6 +34,8 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
   - [Update Framework Version](#update-framework-version)
   - [Controller](#controller)
   - [Model](#model)
+  - [Migration](#migration)
+  - [Seeder](#seeder)
 
 ## Requirements
 
@@ -295,6 +297,76 @@ class HomeController extends Controller
     }
 }
 ```
+
+### Migration
+
+> Create migration use `php mardira make:migration create_table_table_name`, here is example migration
+
+```php
+<?php
+
+namespace App\Database\Migrations;
+
+use App\Core\Migration;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        $this->schema->create('users', function ($table) {
+            $table->increment('id');
+            $table->string('name', 50);
+            $table->string('email',50)->unique();
+            $table->string('password', 64);
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        $this->schema->dropIfExists('users');
+    }
+}
+```
+
+### Seeder
+
+> Create seeder use `php mardira make:seeder SeederName`, here is example seeder
+
+```php
+<?php
+
+namespace App\Database\Seeders;
+
+use App\Core\Seeder;
+use App\Core\QueryBuilder as DB;
+
+class UserSeeder extends Seeder
+{
+    public function run()
+    {
+        $data = [
+            [
+                'name' => 'Administrator',
+                'username' => 'admin',
+                'email' => 'admin@admin.com',
+                'password' => password_hash('password', PASSWORD_DEFAULT),
+                'role_id' => 1,
+            ],
+            [
+                'name' => 'User',
+                'username' => 'user',
+                'email' => 'user@user.com',
+                'password' => password_hash('password', PASSWORD_DEFAULT),
+                'role_id' => 2,
+            ]
+        ];
+        DB::table('users')->insert($data);
+    }
+}
+
+```
+
 
 
 ## Support
