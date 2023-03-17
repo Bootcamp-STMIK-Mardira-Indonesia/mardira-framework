@@ -14,11 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-
-
 trait Responses
 {
-
     /**
      * Response and status code
      *
@@ -26,13 +23,11 @@ trait Responses
      * @param  mixed $data
      * @return void
      */
-    public static function response(int $code, $data): void
+    public static function response(int $code = 200, $data): void
     {
         http_response_code($code);
         header('Content-Type: application/json');
         echo json_encode($data);
         exit;
     }
-
-
 }
