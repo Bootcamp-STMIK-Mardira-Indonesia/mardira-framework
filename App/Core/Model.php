@@ -17,18 +17,21 @@ class Model
         $this->statement = $this->statement->connection;
     }
 
-    public function all(): array
+    public static function all(): array
     {
-        $query = "SELECT * FROM {$this->table}";
-        $statement = $this->statement->prepare($query);
+        $table = (new static)->table;
+        $query = "SELECT * FROM {$table}";
+        $statement = (new static)->statement->prepare($query);
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function find(int $id)
+    public static function find(int $id)
     {
-        $query = "SELECT * FROM {$this->table} WHERE {$this->primaryKey} = :id";
-        $statement = $this->statement->prepare($query);
+        $table = (new static)->table;
+        $primaryKey = (new static)->primaryKey;
+        $query = "SELECT * FROM {$table} WHERE {$primaryKey} = :id";
+        $statement = (new static)->statement->prepare($query);
         $statement->bindParam(':id', $id);
         $statement->execute();
         return $statement->fetch(PDO::FETCH_OBJ);
