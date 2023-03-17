@@ -393,6 +393,7 @@ class AuthMiddleware extends Middleware
     }
 }
 ```
+
 > to use middleware, you can add middleware in route
 
 ```php
@@ -429,6 +430,165 @@ use App\Core\Route;
 Router::controller(ProductController::class)->group(function () {
     Router::post('/products/store', 'store');
 });
+
+```
+
+### Query Builder
+
+<!-- description of querybuilder from mardira framework -->
+
+#### Select
+
+```php
+DB::table('users')->select('name', 'email')->get();
+```
+
+#### Where
+
+```php
+
+// equal
+DB::table('users')->where('id', 1)->get();
+
+DB::table('users')->where('id', 1, '>')->get();
+
+DB::table('users')->where('id', 1, '<')->get();
+
+DB::table('users')->where('id', 1, '>=')->get();
+
+DB::table('users')->where('id', 1, '<=')->get();
+
+DB::table('users')->where('id', 1, '!=')->get();
+
+DB::table('users')->where('id', 1, '<>')->get();
+
+// like
+
+DB::table('users')->where('name', 'admin', 'like')->get();
+
+DB::table('users')->where('name', 'admin', 'not like')->get();
+
+```
+
+#### Or Where
+
+```php
+
+
+DB::table('users')->orWhere('id', 1)->get();
+
+DB::table('users')->orWhere('id', 1, '>')->get();
+
+DB::table('users')->orWhere('id', 1, '<')->get();
+
+DB::table('users')->orWhere('id', 1, '>=')->get();
+
+DB::table('users')->orWhere('id', 1, '<=')->get();
+
+DB::table('users')->orWhere('id', 1, '!=')->get();
+
+DB::table('users')->orWhere('id', 1, '<>')->get();
+
+```
+
+#### Where In
+
+```php
+
+DB::table('users')->whereIn('id', [1,2,3])->get();
+
+DB::table('users')->whereNotIn('id', [1,2,3])->get();
+
+```
+
+#### Where Not In
+
+```php
+
+DB::table('users')->whereNotIn('id', [1,2,3])->get();
+
+```
+
+#### Where Null
+
+```php
+
+DB::table('users')->whereNull('id')->get();
+```
+
+#### Where Not Null
+
+```php
+DB::table('users')->whereNotNull('id')->get();
+```
+
+#### Order By
+
+```php
+
+DB::table('users')->orderBy('id', 'desc')->get();
+
+DB::table('users')->orderBy('id', 'asc')->get();
+
+```
+
+#### Join Table
+
+```php
+
+DB::table('users')
+    ->join('roles', 'users.role_id', '=', 'roles.id')
+    ->select('users.*', 'roles.name as role_name')
+    ->get();
+
+```
+
+#### Group By
+
+```php
+
+DB::table('users')
+    ->groupBy('role_id')
+    ->get();
+
+```
+
+#### Insert
+
+```php
+
+DB::table('users')->insert([
+    'name' => 'user',
+    'email' => 'user@user.com',
+    'password' => password_hash('password', PASSWORD_DEFAULT),
+]);
+
+```
+
+#### Update
+
+```php
+
+DB::table('users')->where('id', 1)->update([
+    'name' => 'user',
+    'email' => 'user@gmail.com',
+]);
+
+```
+
+#### Delete
+
+```php
+
+DB::table('users')->where('id', 1)->delete();
+
+```
+
+#### Count
+
+```php
+
+DB::table('users')->count();
 
 ```
 
