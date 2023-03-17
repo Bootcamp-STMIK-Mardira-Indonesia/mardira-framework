@@ -39,6 +39,23 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
   - [Middleware](#middleware)
   - [Route](#route)
     - [Route Group](#route-group)
+  - [Query Builder](#query-builder)
+    - [Select](#select)
+    - [Where](#where)
+    - [Or Where](#or-where)
+    - [Where In](#where-in)
+    - [Where Not In](#where-not-in)
+    - [Where Null](#where-null)
+    - [Where Not Null](#where-not-null)
+    - [Order By](#order-by)
+    - [Group By](#group-by)
+    - [Join](#join)
+    - [Insert](#insert)
+    - [Update](#update)
+    - [Delete](#delete)
+    - [Count](#count)
+
+
 
 ## Requirements
 
