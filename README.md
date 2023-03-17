@@ -194,6 +194,38 @@ php mardira make:auth --refresh
 php mardira update
 ```
 
+### Controller
+> Example Controller
+
+```php
+<?php
+
+namespace App\Controllers;
+
+use App\Core\Controller;
+
+class HomeController extends Controller
+{
+    public function index()
+    {
+        $this->response->json([
+            'message' => 'Hello World'
+        ], 200);
+    }
+}
+```
+
+> to use controller, you can add route in `App/Routes/Api.php`
+
+```php
+<?php
+
+use App\Core\Route;
+use App\Controllers\HomeController;
+
+Route::get('/', [HomeController::class, 'index']);
+```
+
 ## Support
 
 Reach out to me at one of the following places!
