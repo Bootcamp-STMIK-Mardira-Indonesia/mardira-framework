@@ -34,6 +34,7 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
   - [Create Authetication](#create-authetication)
   - [Refresh Authetication](#refresh-authetication)
   - [Update Framework Version](#update-framework-version)
+- [Controller](#controller)
 
 ## Requirements
 
@@ -64,6 +65,7 @@ mardira-framework
 │   ├── Routes
 │   │   ├── Api.php
 ```
+
 
 ## Installation
 
@@ -195,7 +197,8 @@ php mardira update
 ```
 
 ### Controller
-> Example Controller
+
+> Create controller use `php mardira make:controller ControllerName`, here is example controller
 
 ```php
 <?php
@@ -223,7 +226,7 @@ class HomeController extends Controller
 use App\Core\Route;
 use App\Controllers\HomeController;
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/home', [HomeController::class, 'index']);
 ```
 
 ## Support
