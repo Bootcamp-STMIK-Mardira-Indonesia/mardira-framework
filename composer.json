@@ -17,7 +17,8 @@
     "require": {
         "vlucas/phpdotenv": "^5.5",
         "firebase/php-jwt": "^6.3",
-        "symfony/console": "2.6.7"
+        "symfony/console": "2.6.7",
+        "doctrine/inflector": "^2.0"
     },
     "autoload": {
         "psr-4": {
