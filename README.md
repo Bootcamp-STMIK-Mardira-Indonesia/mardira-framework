@@ -2,11 +2,9 @@
 
 <p align="center"><a href="https://demostmikmi.com" target="_blank"><img src="https://raw.githubusercontent.com/Bootcamp-STMIK-Mardira-Indonesia/mardira-framework/master/public/logo.png" width="150" alt="Mardira Logo"></a></p>
 
-
 <!-- Description here -->
 
 Mardira Framework is a PHP framework Model Controller Based for building web applications and APIs. It is designed to be simple, and fast.
-
 
 ![Total Downloads](https://img.shields.io/packagist/dt/mardira/mardira-framework?color=e&style=for-the-badge)
 ![Total Stars](https://img.shields.io/github/stars/Bootcamp-STMIK-Mardira-Indonesia/mardira-framework?color=e&style=for-the-badge)
@@ -34,7 +32,8 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
   - [Create Authetication](#create-authetication)
   - [Refresh Authetication](#refresh-authetication)
   - [Update Framework Version](#update-framework-version)
-- [Controller](#controller)
+  - [Controller](#controller)
+  - [Model](#model)
 
 ## Requirements
 
@@ -65,7 +64,6 @@ mardira-framework
 │   ├── Routes
 │   │   ├── Api.php
 ```
-
 
 ## Installation
 
@@ -211,9 +209,9 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $this->response->json([
+        $this->response->json(200,[
             'message' => 'Hello World'
-        ], 200);
+        ]);
     }
 }
 ```
@@ -228,6 +226,76 @@ use App\Controllers\HomeController;
 
 Route::get('/home', [HomeController::class, 'index']);
 ```
+
+### Response
+
+> You can use response in controller
+
+```php
+$this->response->json(200,[
+    'message' => 'Hello World'
+]);
+
+```
+
+> return json expected
+
+```json
+{
+  "message": "Hello World"
+}
+```
+
+> another response example 409
+
+```php
+$this->response->json(409,[
+    'message' => 'Conflict'
+]);
+```
+
+### Model
+
+> Create model use `php mardira make:model ModelName`, here is example model
+
+```php
+<?php
+
+namespace App\Models;
+
+use App\Core\Model;
+
+class User extends Model
+{
+    protected $table = 'users';
+    protected $primaryKey = 'id';
+}
+```
+
+> to use model, you can add model in `App/Controllers/ControllerName.php`
+
+```php
+<?php
+
+namespace App\Controllers;
+
+use App\Core\Controller;
+use App\Models\User;
+
+class HomeController extends Controller
+{
+    public function index()
+    {
+        $user = User::all();
+
+        $this->response->json(200,[
+            'message' => 'Hello World',
+            'data' => $user
+        ]);
+    }
+}
+```
+
 
 ## Support
 
