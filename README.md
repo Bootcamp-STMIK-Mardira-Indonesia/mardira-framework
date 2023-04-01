@@ -454,6 +454,16 @@ Router::controller(ProductController::class)->group(function () {
 
 <!-- description of querybuilder from mardira framework -->
 
+<!-- use library Query Builder -->
+
+####
+
+```php
+
+use App\Core\QueryBuilder as DB;
+
+```
+
 #### Select
 
 ```php
