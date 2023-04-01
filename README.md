@@ -59,7 +59,7 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
 
 ## Requirements
 
-- PHP >= 7.4
+- PHP = 7.4
 - MySQL >= 5.7.8
 - Apache >= 2.4.41
 - Composer >= 2.0.9
@@ -89,6 +89,16 @@ mardira-framework
 
 ## Installation
 
+
+### Setup
+
+> You can create a new project using composer
+
+```shell
+composer create-project mardira/mardira-framework <your_project_name>
+```
+> or you can clone this project
+
 <!-- Installation here -->
 
 ### Clone
@@ -109,14 +119,6 @@ composer install
 
 ```shell
 composer update
-```
-
-### Setup
-
-> You can create a new project using composer
-
-```shell
-composer create-project mardira/mardira-framework <your_project_name>
 ```
 
 ## Usage
