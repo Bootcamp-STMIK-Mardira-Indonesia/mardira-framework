@@ -89,6 +89,16 @@ mardira-framework
 
 ## Installation
 
+
+### Setup
+
+> You can create a new project using composer
+
+```shell
+composer create-project mardira/mardira-framework <your_project_name>
+```
+> or you can clone this project
+
 <!-- Installation here -->
 
 ### Clone
@@ -109,14 +119,6 @@ composer install
 
 ```shell
 composer update
-```
-
-### Setup
-
-> You can create a new project using composer
-
-```shell
-composer create-project mardira/mardira-framework <your_project_name>
 ```
 
 ## Usage
