@@ -59,7 +59,7 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
 
 ## Requirements
 
-- PHP >= 7.4
+- PHP = 7.4
 - MySQL >= 5.7.8
 - Apache >= 2.4.41
 - Composer >= 2.0.9
