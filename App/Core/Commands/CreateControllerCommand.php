@@ -92,8 +92,25 @@ class CreateControllerCommand extends Command
             'DummyParentClass' => 'Controller',
             'DummyModel' => $model,
         ];
-
         return $replacements;
+    }
+
+    protected function createSubFolder($name)
+    {
+        $folderName = explode('/', $name);
+        $folderName = $folderName;
+        $folderPath = '';
+        foreach ($folderName as $key => $value) {
+            if ($key == count($folderName) - 1) {
+                break;
+            }
+
+            $folderPath .= $value . '/';
+
+            if (!file_exists($this->getFilePath($folderPath))) {
+                mkdir($this->getFilePath($folderPath));
+            }
+        }
     }
 
     protected function make($name, $model)
@@ -111,6 +128,36 @@ class CreateControllerCommand extends Command
         $fileName = $this->getFileName($name);
 
         $filePath = $this->getFilePath($fileName);
+
+        // create sub folder if it doesn't exist
+        if (strpos($name, '/') !== false) {
+            $this->createSubFolder($name);
+            $folderName = explode('/', $name);
+            // replace namespace
+
+            $namespace = $this->getNamespace();
+            foreach ($folderName as $key => $value) {
+                if ($key == count($folderName) - 1) {
+                    break;
+                }
+
+                $namespace .= '\\' . $value;
+            }
+
+            $stub = str_replace(
+                $replacements['DummyNamespace'],
+                $namespace,
+                $stub
+            );
+
+            // replace class name
+            $className = explode('/', $name);
+            $stub = str_replace(
+                $replacements['DummyClass'],
+                end($className),
+                $stub
+            );
+        }
 
         file_put_contents($filePath, $stub);
     }
