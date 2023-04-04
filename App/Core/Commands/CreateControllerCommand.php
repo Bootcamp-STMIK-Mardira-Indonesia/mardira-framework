@@ -46,12 +46,16 @@ class CreateControllerCommand extends Command
 
         // check if controller already exists
         if ($this->alreadyExists($name)) {
-            $output->writeln("<error>Controller already exists!</error>");
+            $infoText = "Controller {$name} already exists!";
+            $yellowText = "\033[33m" . $infoText . "\033[0m";
+            $output->writeln("<info>{$yellowText}</info>");
             return;
         }
 
+        $infoText = "Controller {$name} created successfully.";
+        $greenText = "\033[32m" . $infoText . "\033[0m";
         $this->make($name, $model);
-        $output->writeln("<info>Controller created successfully.</info>");
+        $output->writeln("<info>{$greenText}</info>");
     }
 
     protected function alreadyExists($name)
