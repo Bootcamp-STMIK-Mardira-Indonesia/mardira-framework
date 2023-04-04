@@ -141,52 +141,50 @@ class Router
 
         foreach (self::$routes as $route) {
 
-            // if request uri same with route path
-            if ($route['path'] === $requestUri) {
-                if ($route['method'] !== $requestMethod) {
-                    self::response(405, ['message' => 'Method Not Allowed']);
-                    return;
-                }
-            }
-
-
             if ($route['method'] === $requestMethod) {
-
-                $path = $route['path'];
-                $path = str_replace('/', '\/', $path);
-                $path = preg_replace('/\{[a-zA-Z0-9]+\}/', '([a-zA-Z0-9]+)', $path);
-                $path = '/^' . $path . '$/';
-                try {
-                    if (preg_match($path, $requestUri, $matches)) {
-
-                        // if route has middleware
-                        if (count($route['middleware']) > 0) {
-                            foreach ($route['middleware'] as $middleware) {
-                                $middleware = new $middleware;
-                                $middleware->handle(function () {
-                                    return;
-                                });
-                            }
-                        }
-
-                        $controller = $route['controller'];
-                        $function = $route['function'];
-                        $controller = new $controller;
-                        $controller->$function(...array_slice($matches, 1));
-                        return;
-                    }
-                } catch (\Throwable $th) {
-                    self::response(500, [
-                        'message' => $th->getMessage(),
-                        'file' => $th->getFile(),
-                        'line' => $th->getLine(),
-                        'trace' => $th->getTrace(),
-                    ]);
-                    return;
-                }
+                self::checkRoute($route['path'], $route['controller'], $route['function'], $requestUri, $route['middleware']);
+            } else {
+                self::response(405, ['message' => 'Method Not Allowed']);
             }
         }
 
         self::response(404, ['message' => 'Not Found']);
+    }
+
+
+    private static function checkRoute($routePath, $controller, $function, $requestUri, $middlewares)
+    {
+        $path = $routePath;
+        $path = str_replace('/', '\/', $path);
+        $path = preg_replace('/\{[a-zA-Z0-9]+\}/', '([a-zA-Z0-9]+)', $path);
+        $path = '/^' . $path . '$/';
+        try {
+            if (preg_match($path, $requestUri, $matches)) {
+
+                // if route has middleware
+                if (count($middlewares) > 0) {
+                    foreach ($middlewares as $middleware) {
+                        $middleware = new $middleware;
+                        $middleware->handle(function () {
+                            return;
+                        });
+                    }
+                }
+
+                $controller = $controller;
+                $function = $function;
+                $controller = new $controller;
+                $controller->$function(...array_slice($matches, 1));
+                return;
+            }
+        } catch (\Throwable $th) {
+            self::response(500, [
+                'message' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine(),
+                'trace' => $th->getTrace(),
+            ]);
+            return;
+        }
     }
 }
