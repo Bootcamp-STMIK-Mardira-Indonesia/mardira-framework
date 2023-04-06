@@ -14,14 +14,22 @@ class Validator
         self::$data = $input;
         foreach ($fields as $field => $rules) {
             foreach ($rules as $rule => $value) {
-                if ($rule === 'required') {
-                    self::required($field);
-                } else if ($rule === 'min') {
-                    self::min($field, $value);
-                } else if ($rule === 'max') {
-                    self::max($field, $value);
-                } else if ($rule === 'email') {
-                    self::email($field);
+                switch ($rule) {
+                    case 'required':
+                        self::required($field);
+                        break;
+                    case 'min':
+                        self::min($field, $value);
+                        break;
+                    case 'max':
+                        self::max($field, $value);
+                        break;
+                    case 'email':
+                        self::email($field);
+                        break;
+                    case 'file':
+                        self::file($field);
+                        break;
                 }
             }
         }
@@ -53,6 +61,14 @@ class Validator
     {
         if (!filter_var(self::$data[$field], FILTER_VALIDATE_EMAIL)) {
             self::addError($field, 'The ' . $field . ' field must be a valid email');
+        }
+    }
+
+    private static function file(string $field): void
+    {
+        if (!isset($_FILES[$field]) || !is_uploaded_file($_FILES[$field]['tmp_name'])) {
+            self::addError($field, 'The ' . $field . ' field must be a valid file');
+            return;
         }
     }
 
