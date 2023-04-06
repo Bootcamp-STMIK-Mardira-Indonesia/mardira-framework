@@ -6,8 +6,15 @@ class Seeder
 {
     protected array $seederCalled = [];
 
-    public function call(string $seeder): void
+    public function call($seeder): void
     {
+        // check if seeder is array
+        if (is_array($seeder)) {
+            foreach ($seeder as $s) {
+                $this->call($s);
+            }
+            return;
+        }
         $seeder = $this->getClassName($seeder);
         $this->addSeederCalled($seeder);
         $seeder = new $seeder();
