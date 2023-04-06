@@ -138,13 +138,17 @@ class Router
             self::response(200, ['message' => 'Welcome to the Mardira Framework']);
             return;
         }
-
         foreach (self::$routes as $route) {
+            // remove $requestUri from /users/ to /users if last character is /
+            if (substr($requestUri, -1) === '/') {
+                $requestUri = substr($requestUri, 0, -1);
+            }
 
-            if ($route['method'] === $requestMethod) {
-                self::checkRoute($route['path'], $route['controller'], $route['function'], $requestUri, $route['middleware']);
-            } else {
-                self::response(405, ['message' => 'Method Not Allowed']);
+            if ($route['path'] === $requestUri) {
+                if ($route['method'] === $requestMethod) {
+                    self::checkRoute($route['path'], $route['controller'], $route['function'], $requestUri, $route['middleware']);
+                    return;
+                }
             }
         }
 
