@@ -233,7 +233,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $this->response->json(200,[
+        $this->response(200,[
             'message' => 'Hello World'
         ]);
     }
@@ -256,7 +256,7 @@ Route::get('/home', [HomeController::class, 'index']);
 > You can use response in controller
 
 ```php
-$this->response->json(200,[
+$this->response(200,[
     'message' => 'Hello World'
 ]);
 
@@ -312,7 +312,7 @@ class HomeController extends Controller
     {
         $user = User::all();
 
-        $this->response->json(200,[
+        $this->response(200,[
             'message' => 'Hello World',
             'data' => $user
         ]);
