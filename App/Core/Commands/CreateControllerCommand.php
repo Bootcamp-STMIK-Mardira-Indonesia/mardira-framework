@@ -28,7 +28,7 @@ class CreateControllerCommand extends Command
             ->setDescription($this->commandDescription)
             ->addArgument(
                 $this->commandArgumentName,
-                InputArgument::REQUIRED,
+                InputArgument::OPTIONAL,
                 $this->commandArgumentDescription
             )
             ->addOption(
@@ -43,6 +43,18 @@ class CreateControllerCommand extends Command
     {
         $name = $input->getArgument('name');
         $model = $input->getOption('model');
+
+        if (!$name) {
+            $infoText = "What is the name of the controller?";
+            $blueText = "\033[34m" . $infoText . "\033[0m";
+            $name = $this->ask($blueText);
+            if (!$name) {
+                $infoText = "Controller name is required!";
+                $redText = "\033[31m" . $infoText . "\033[0m";
+                $output->writeln("<info>{$redText}</info>");
+                return;
+            }
+        }
 
         // check if controller already exists
         if ($this->alreadyExists($name)) {
@@ -60,6 +72,14 @@ class CreateControllerCommand extends Command
         if ($model) {
             $this->runCreateModelCommand($model);
         }
+    }
+
+    public function ask($question)
+    {
+        $handle = fopen("php://stdin", "r");
+        echo $question . " ";
+        $line = fgets($handle);
+        return trim($line);
     }
 
     // method to run CreateModelCommand
