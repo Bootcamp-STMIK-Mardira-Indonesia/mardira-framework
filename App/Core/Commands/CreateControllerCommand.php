@@ -56,13 +56,13 @@ class CreateControllerCommand extends Command
         $greenText = "\033[32m" . $infoText . "\033[0m";
         $this->make($name, $model);
         $output->writeln("<info>{$greenText}</info>");
-
         //   if use model option run command CreateModelCommand
         if ($model) {
             $this->runCreateModelCommand($model);
         }
     }
 
+    // method to run CreateModelCommand
     public function runCreateModelCommand($model)
     {
         $command = $this->getApplication()->find('make:model');
