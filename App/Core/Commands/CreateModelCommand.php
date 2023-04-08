@@ -48,18 +48,20 @@ class CreateModelCommand extends Command
         // if model exist
 
         if (file_exists($this->getFilePath($this->getFileName($name)))) {
-            $output->writeln("<error>Model already exists!</error>");
+            $infoText = "Model {$name} already exists!";
+            $yellowText = "\033[33m" . $infoText . "\033[0m";
+            $output->writeln("<info>{$yellowText}</info>");
             return;
         }
 
         $this->make($name, $table);
 
-        // text terminal yellow color
+        // text terminal green color
 
         $infoText = "Model created successfully.";
-        $yellow = "\033[32m" . $infoText . "\033[0m";
+        $greenText = "\033[32m" . $infoText . "\033[0m";
 
-        $output->writeln("<info>{$yellow}</info>");
+        $output->writeln("<info>{$greenText}</info>");
     }
 
     protected function getStub(): string
