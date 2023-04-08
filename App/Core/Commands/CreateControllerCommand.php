@@ -56,6 +56,23 @@ class CreateControllerCommand extends Command
         $greenText = "\033[32m" . $infoText . "\033[0m";
         $this->make($name, $model);
         $output->writeln("<info>{$greenText}</info>");
+
+        //   if use model option run command CreateModelCommand
+        if ($model) {
+            $this->runCreateModelCommand($model);
+        }
+    }
+
+    public function runCreateModelCommand($model)
+    {
+        $command = $this->getApplication()->find('make:model');
+        $arguments = [
+            'command' => 'make:model',
+            'name' => $model,
+        ];
+        $input = new \Symfony\Component\Console\Input\ArrayInput($arguments);
+        $output = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $command->run($input, $output);
     }
 
     protected function alreadyExists($name)
