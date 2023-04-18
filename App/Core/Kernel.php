@@ -48,6 +48,7 @@ class Kernel
             'App\Core\Commands\RunGlobalSeederCommand',
             'App\Core\Commands\RunSeederCommand',
             'App\Core\Commands\CreateUpdateCommand',
+            'App\Core\Commands\CreateRouteCommand',
         ];
         return $console;
     }
