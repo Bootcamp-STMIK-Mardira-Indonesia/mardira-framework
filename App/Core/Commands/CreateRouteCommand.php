@@ -207,19 +207,22 @@ class CreateRouteCommand extends Command
         file_put_contents($routePath, $routeContent);
 
         // get last Router::controller
+        $routeContent = file_get_contents($routePath);
         $lastRoute = strrpos($routeContent, 'Router::controller');
         if (!$lastRoute) {
             $lastRoute = substr($lastUseController, 0, strpos($lastUseController, ';') + 1);
-        } else {
-            $lastRoute = substr($routeContent, $lastRoute);
-            // get end of line Router::controller
-            $lastRoute = substr($lastRoute, 0, strpos($lastRoute, '});') + 3);
         }
         $controllerName = $this->getControllerName($controller);
 
         $checkRoute = strrpos($routeContent, "Router::controller({$controllerName}::class)");
         if (!$checkRoute) {
-            $routeContent = str_replace($lastRoute, $lastRoute . PHP_EOL . PHP_EOL . $routeStubContent, $routeContent);
+            $useControllers = strrpos($routeContent, 'use App\Controllers\\');
+
+            // get last use controller
+            $lastUseController = substr($routeContent, $useControllers);
+            $lastUseController = substr($lastUseController, 0, strpos($lastUseController, ';') + 1);
+
+            $routeContent = str_replace($lastUseController, $lastUseController . PHP_EOL . PHP_EOL . $routeStubContent, $routeContent);
             file_put_contents($routePath, $routeContent);
         } else {
             $groupStubMethod = $this->getGroupStubMethod();
