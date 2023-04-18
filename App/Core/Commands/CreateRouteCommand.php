@@ -12,7 +12,7 @@ use Doctrine\Inflector\InflectorFactory;
 
 class CreateRouteCommand extends Command
 {
-    use MakeCommand;
+    use  MakeCommand;
 
     protected string $commandName = 'make:route';
     protected string $commandDescription = "Creates a new route";
@@ -70,11 +70,49 @@ class CreateRouteCommand extends Command
         }
         $this->generateRoute($name, $controller);
 
-        $infoText = "Route created successfully.";
+        // if method does not exist from controller automatically create it
+        $findMethod = $this->findMethod($controller, $name);
+        if (!$findMethod) {
+            $infoText = "<info>Method {$name} from controller {$controller} does not exist!</info>";
+            $yellowText = "\033[33m" . $infoText . "\033[0m";
+            $infoText = "Creating method {$name} from controller {$controller}...";
+            $blueText = "\033[34m" . $infoText . "\033[0m";
+            $infoText = "<info>Method created successfully.</info>";
+            $greenText = "\033[32m" . $infoText . "\033[0m";
+            $output->writeln($yellowText);
+            $output->writeln($blueText);
+            $output->writeln($greenText);
+
+            $this->createMethod($controller, $name);
+        }
+
+        $infoText = "<info>Route created successfully.</info>";
         $greenText = "\033[32m" . $infoText . "\033[0m";
         $output->writeln($greenText);
     }
 
+    protected function createMethod($controller, $name)
+    {
+        $controllerPath = $this->getControllerPath($controller);
+        $controller = file_get_contents($controllerPath);
+        $class = strrpos($controller, '}');
+        $controller = substr($controller, 0, $class);
+        $controller .= "\tpublic function {$name}()\n\t{\n\t\t\n\t}\n\n}";
+        file_put_contents($controllerPath, $controller);
+    }
+
+    protected function findMethod($controller, $name)
+    {
+        $controller = $this->getControllerPath($controller);
+        $controller = file_get_contents($controller);
+        $controller = explode('public function', $controller);
+        foreach ($controller as $key => $value) {
+            if (strpos($value, $name) !== false) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     protected function ask($question)
     {
@@ -138,9 +176,23 @@ class CreateRouteCommand extends Command
             'DummyRoute' => '/' . $this->splitNameController($controller) . '/' . $this->getAction($name),
             'DummyAction' => $this->getAction($name),
             'DummyController' => $this->getControllerName($controller),
+            'DummyNameController' => $this->splitSlashController($controller),
         ];
     }
 
+    protected function splitSlashController($controller)
+    {
+        $controller = $this->getControllerName($controller);
+        // remove controller from last string
+        $controller = str_replace('\\', '/', $controller);
+        // split if there is /
+        if (strpos($controller, '/') !== false) {
+            $controller = explode('/', $controller);
+            $controller = end($controller);
+        }
+
+        return $controller;
+    }
 
     protected function splitNameController($controller)
     {
@@ -155,6 +207,11 @@ class CreateRouteCommand extends Command
         $inflector = InflectorFactory::create()->build();
         $controller = $inflector->pluralize($controller);
         return $controller;
+    }
+
+    protected function getControllerPath($controller)
+    {
+        return 'App/Controllers/' . $controller . '.php';
     }
 
     protected function getAction($name)
