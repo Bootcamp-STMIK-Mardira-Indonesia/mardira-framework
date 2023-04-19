@@ -269,7 +269,7 @@ class CreateRouteCommand extends Command
         if (!$lastRoute) {
             $lastRoute = substr($lastUseController, 0, strpos($lastUseController, ';') + 1);
         }
-        $controllerName = $this->getControllerName($controller);
+        $controllerName = $this->splitSlashController($controller);
 
         $checkRoute = strrpos($routeContent, "Router::controller({$controllerName}::class)");
         if (!$checkRoute) {
