@@ -22,6 +22,7 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
   - [Create .env](#create-env)
   - [Create Controller](#create-controller)
   - [Create Model](#create-model)
+  - [Create Route](#create-route)
   - [Create Migration](#create-migration)
   - [Run Migration](#run-migration)
   - [Refresh Migration](#refresh-migration)
@@ -55,8 +56,6 @@ Mardira Framework is a PHP framework Model Controller Based for building web app
     - [Delete](#delete)
     - [Count](#count)
 
-
-
 ## Requirements
 
 - PHP = 7.4
@@ -89,7 +88,6 @@ mardira-framework
 
 ## Installation
 
-
 ### Setup
 
 > You can create a new project using composer
@@ -97,6 +95,7 @@ mardira-framework
 ```shell
 composer create-project mardira/mardira-framework <your_project_name>
 ```
+
 > or you can clone this project
 
 <!-- Installation here -->
@@ -153,6 +152,12 @@ php mardira make:controller ControllerName
 
 ```shell
 php mardira make:model ModelName
+```
+
+### Create Route
+
+```shell
+php mardira make:route route_name --controller=ControllerName
 ```
 
 ### Create Migration
@@ -620,7 +625,6 @@ DB::table('users')->where('id', 1)->delete();
 DB::table('users')->count();
 
 ```
-
 
 ## Support
 
