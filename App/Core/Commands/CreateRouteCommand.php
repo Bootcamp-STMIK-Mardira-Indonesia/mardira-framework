@@ -23,6 +23,9 @@ class CreateRouteCommand extends Command
     protected string $commandOptionName = "controller";
     protected string $commandOptionDescription = 'Generate a resource controller for the given model';
 
+    protected string $commandParameterName = "parameter";
+    protected string $commandParameterDescription = "Parameter of the route";
+
     protected function configure()
     {
         $this->setName($this->commandName)
@@ -37,6 +40,11 @@ class CreateRouteCommand extends Command
                 null,
                 InputOption::VALUE_OPTIONAL,
                 $this->commandOptionDescription
+            )->addOption(
+                $this->commandParameterName,
+                null,
+                InputOption::VALUE_OPTIONAL,
+                $this->commandParameterDescription
             );
     }
 
@@ -44,10 +52,10 @@ class CreateRouteCommand extends Command
     {
         $name = $input->getArgument('name');
         $controller = $input->getOption('controller');
+        $parameter = $input->getOption('parameter');
 
 
         // if controller does not exist from file, ask if user wants to create it with option y/n
-
         if (!(file_exists('App/Controllers/' . $controller . '.php'))) {
             $infoText = "Controller does not exist. Do you want to create it? (y/n)";
             $yellowText = "\033[33m" . $infoText . "\033[0m";
@@ -68,10 +76,10 @@ class CreateRouteCommand extends Command
                 return;
             }
         }
-        $this->generateRoute($name, $controller);
+        $this->generateRoute($name, $controller, $parameter);
 
         // if method does not exist from controller automatically create it
-        $findMethod = $this->findMethod($controller, $name);
+        $findMethod = $this->findMethod($controller, $name, $parameter);
         if (!$findMethod) {
             $infoText = "<info>Method {$name} from controller {$controller} does not exist!</info>";
             $yellowText = "\033[33m" . $infoText . "\033[0m";
@@ -83,7 +91,7 @@ class CreateRouteCommand extends Command
             $output->writeln($blueText);
             $output->writeln($greenText);
 
-            $this->createMethod($controller, $name);
+            $this->createMethod($controller, $name, $parameter);
         }
 
         $infoText = "<info>Route created successfully.</info>";
@@ -91,22 +99,39 @@ class CreateRouteCommand extends Command
         $output->writeln($greenText);
     }
 
-    protected function createMethod($controller, $name)
+    protected function createMethod($controller, $name, $parameter = null)
     {
         $controllerPath = $this->getControllerPath($controller);
         $controller = file_get_contents($controllerPath);
         $class = strrpos($controller, '}');
         $controller = substr($controller, 0, $class);
-        $controller .= "\tpublic function {$name}()\n\t{\n\t\t\n\t}\n\n}";
+        // if parameter is not null, create method with parameter
+        if ($parameter) {
+            // if paramter is separated by comma, explode it
+            if (strpos($parameter, ',') !== false) {
+                $parameter = explode(',', $parameter);
+                $parameter = array_map(function ($item) {
+                    return '$' . $item;
+                }, $parameter);
+                $parameter = implode(', ', $parameter);
+            } else {
+                $parameter = '$' . $parameter;
+            }
+            $controller .= "\tpublic function {$name}({$parameter})\n\t{\n\t\t\n\t}\n\n}";
+        } else {
+            $controller .= "\tpublic function {$name}()\n\t{\n\t\t\n\t}\n\n}";
+        }
         file_put_contents($controllerPath, $controller);
     }
 
-    protected function findMethod($controller, $name)
+    protected function findMethod($controller, $name, $parameter = null)
     {
         $controller = $this->getControllerPath($controller);
         $controller = file_get_contents($controller);
         $controller = explode('public function', $controller);
+
         foreach ($controller as $key => $value) {
+            // if parameter is not null, check if method has parameter
             if (strpos($value, $name) !== false) {
                 return true;
             }
@@ -170,14 +195,27 @@ class CreateRouteCommand extends Command
         return 'App/Routes/Api.php';
     }
 
-    protected function getReplacements($name, $controller)
+    protected function getReplacements($name, $controller, $parameter = null)
     {
-        return [
-            'DummyRoute' => '/' . $this->splitNameController($controller) . '/' . $this->getAction($name),
-            'DummyAction' => $this->getAction($name),
-            'DummyController' => $this->getControllerName($controller),
-            'DummyNameController' => $this->splitSlashController($controller),
-        ];
+        // if parameter is not null, create route with parameter with {parameter}
+        if ($parameter) {
+            // if paramter is separated by comma, explode it
+            if (strpos($parameter, ',') !== false) {
+                $parameter = explode(',', $parameter);
+                $parameter = array_map(function ($item) {
+                    return '{' . $item . '}';
+                }, $parameter);
+                $parameter = implode('/', $parameter);
+            } else {
+                $parameter = '{' . $parameter . '}';
+            }
+            return [
+                'DummyRoute' => '/' . $this->splitNameController($controller) . '/' . $this->getAction($name) . '/' . $parameter,
+                'DummyAction' => $this->getAction($name),
+                'DummyController' => $this->getControllerName($controller),
+                'DummyNameController' => $this->splitSlashController($controller),
+            ];
+        }
     }
 
     protected function splitSlashController($controller)
@@ -225,9 +263,9 @@ class CreateRouteCommand extends Command
         return ucfirst($name);
     }
 
-    protected function generateRoute($name, $controller)
+    protected function generateRoute($name, $controller, $parameter = null)
     {
-        $replacements = $this->getReplacements($name, $controller);
+        $replacements = $this->getReplacements($name, $controller, $parameter);
 
         $routeStub = $this->getRouteStub();
         $routePath = $this->getRoutePath();
