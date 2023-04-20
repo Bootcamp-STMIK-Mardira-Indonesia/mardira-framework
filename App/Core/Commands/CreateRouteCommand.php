@@ -89,8 +89,14 @@ class CreateRouteCommand extends Command
         if (!$findMethod) {
             $infoText = "<info>Method {$name} from controller {$controller} does not exist!</info>";
             $yellowText = "\033[33m" . $infoText . "\033[0m";
-            $infoText = "Creating method {$name} from controller {$controller}...";
-            $blueText = "\033[34m" . $infoText . "\033[0m";
+            // if its has parameter, create method with parameter method
+            if ($parameter) {
+                $infoText = "Creating method {$name} with parameter {$parameter} from controller {$controller}...";
+                $blueText = "\033[34m" . $infoText . "\033[0m";
+            } else {
+                $infoText = "Creating method {$name} from controller {$controller}...";
+                $blueText = "\033[34m" . $infoText . "\033[0m";
+            }
             $infoText = "<info>Method created successfully.</info>";
             $greenText = "\033[32m" . $infoText . "\033[0m";
             $output->writeln($yellowText);
