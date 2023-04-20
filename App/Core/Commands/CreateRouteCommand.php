@@ -88,7 +88,6 @@ class CreateRouteCommand extends Command
                 return;
             }
         }
-        var_dump($name, $controller, $parameter);
 
         $this->generateRoute($name, $controller, $parameter);
 
