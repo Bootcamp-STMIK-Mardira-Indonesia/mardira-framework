@@ -57,6 +57,8 @@ class CreateRouteCommand extends Command
         // remove any = from controller name
         $controller = str_replace('=', '', $controller);
         $parameter = $input->getOption('parameter');
+        // remove any = from parameter name
+        $parameter = str_replace('=', '', $parameter);
 
 
         // if controller does not exist from file, ask if user wants to create it with option y/n
