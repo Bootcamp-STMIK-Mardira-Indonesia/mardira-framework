@@ -60,6 +60,12 @@ class CreateRouteCommand extends Command
         // remove any = from parameter name
         $parameter = str_replace('=', '', $parameter);
 
+        // if controller is not set, ask user to set it
+        if (!$controller) {
+            $infoText = "Controller is not set. Please type controller name: ";
+            $yellowText = "\033[33m" . $infoText . "\033[0m";
+            $controller = $this->ask($yellowText);
+        }
 
         // if controller does not exist from file, ask if user wants to create it with option y/n
         if (!(file_exists('App/Controllers/' . $controller . '.php'))) {
@@ -82,6 +88,8 @@ class CreateRouteCommand extends Command
                 return;
             }
         }
+        var_dump($name, $controller, $parameter);
+
         $this->generateRoute($name, $controller, $parameter);
 
         // if method does not exist from controller automatically create it
@@ -211,7 +219,7 @@ class CreateRouteCommand extends Command
     {
         // if parameter is not null, create route with parameter with {parameter}
         if ($parameter) {
-            // if paramter is separated by comma, explode it
+            // if parameter is separated by comma, explode it
             if (strpos($parameter, ',') !== false) {
                 $parameter = explode(',', $parameter);
                 $parameter = array_map(function ($item) {
@@ -221,13 +229,13 @@ class CreateRouteCommand extends Command
             } else {
                 $parameter = '{' . $parameter . '}';
             }
-            return [
-                'DummyRoute' => '/' . $this->splitNameController($controller) . '/' . $this->getAction($name) . '/' . $parameter,
-                'DummyAction' => $this->getAction($name),
-                'DummyController' => $this->getControllerName($controller),
-                'DummyNameController' => $this->splitSlashController($controller),
-            ];
         }
+        return [
+            'DummyRoute' => '/' . $this->splitNameController($controller) . '/' . $this->getAction($name) . '/' . $parameter,
+            'DummyAction' => $this->getAction($name),
+            'DummyController' => $this->getControllerName($controller),
+            'DummyNameController' => $this->splitSlashController($controller),
+        ];
     }
 
     protected function splitSlashController($controller)
@@ -278,7 +286,6 @@ class CreateRouteCommand extends Command
     protected function generateRoute($name, $controller, $parameter = null)
     {
         $replacements = $this->getReplacements($name, $controller, $parameter);
-
         $routeStub = $this->getRouteStub();
         $routePath = $this->getRoutePath();
 
