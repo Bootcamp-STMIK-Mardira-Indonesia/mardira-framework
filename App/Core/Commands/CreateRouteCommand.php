@@ -21,9 +21,11 @@ class CreateRouteCommand extends Command
     protected string $commandArgumentDescription = "Name of the route";
 
     protected string $commandOptionName = "controller";
+    protected string $commandShortOptionName = "c";
     protected string $commandOptionDescription = 'Generate a resource controller for the given model';
 
     protected string $commandParameterName = "parameter";
+    protected string $commandShortParameterName = "p";
     protected string $commandParameterDescription = "Parameter of the route";
 
     protected function configure()
@@ -37,12 +39,12 @@ class CreateRouteCommand extends Command
             )
             ->addOption(
                 $this->commandOptionName,
-                null,
+                $this->commandShortOptionName,
                 InputOption::VALUE_OPTIONAL,
                 $this->commandOptionDescription
             )->addOption(
                 $this->commandParameterName,
-                null,
+                $this->commandShortParameterName,
                 InputOption::VALUE_OPTIONAL,
                 $this->commandParameterDescription
             );
@@ -52,6 +54,8 @@ class CreateRouteCommand extends Command
     {
         $name = $input->getArgument('name');
         $controller = $input->getOption('controller');
+        // remove any = from controller name
+        $controller = str_replace('=', '', $controller);
         $parameter = $input->getOption('parameter');
 
 
