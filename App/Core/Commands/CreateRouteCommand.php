@@ -234,6 +234,8 @@ class CreateRouteCommand extends Command
 
     protected function getReplacements($name, $controller, $parameter = null)
     {
+        // if method is index, create route without method
+        $action = $name == 'index' ? '' : '/' . $this->getAction($name);
         // if parameter is not null, create route with parameter with {parameter}
         if ($parameter) {
             // if parameter is separated by comma, explode it
@@ -246,10 +248,12 @@ class CreateRouteCommand extends Command
             } else {
                 $parameter = '{' . $parameter . '}';
             }
-            $dummyRoute = '/' . $this->splitNameController($controller) . '/' . $this->getAction($name) . '/' . $parameter;
+            $dummyRoute = '/' . $this->splitNameController($controller) . $action . '/' . $parameter;
         } else {
-            $dummyRoute = '/' . $this->splitNameController($controller) . '/' . $this->getAction($name);
+            $dummyRoute = '/' . $this->splitNameController($controller) . $action;
         }
+
+
         return [
             'DummyRoute' => $dummyRoute,
             'DummyAction' => $this->getAction($name),
