@@ -59,12 +59,30 @@ class CreateRouteCommand extends Command
         $parameter = $input->getOption('parameter');
         // remove any = from parameter name
         $parameter = str_replace('=', '', $parameter);
+        // if method is not set, ask user to set it
+        if (!$name) {
+            $infoText = "Method is not set. Please type method name: ";
+            $yellowText = "\033[33m" . $infoText . "\033[0m";
+            $name = $this->ask($yellowText);
+            if ($name == '') {
+                $infoText = "Method is not set, route not created.";
+                $blueText = "\033[34m" . $infoText . "\033[0m";
+                $output->writeln($blueText);
+                return;
+            }
+        }
 
         // if controller is not set, ask user to set it
         if (!$controller) {
             $infoText = "Controller is not set. Please type controller name: ";
             $yellowText = "\033[33m" . $infoText . "\033[0m";
             $controller = $this->ask($yellowText);
+            if ($controller == '') {
+                $infoText = "Controller is not set, route not created.";
+                $blueText = "\033[34m" . $infoText . "\033[0m";
+                $output->writeln($blueText);
+                return;
+            }
         }
 
         // if controller does not exist from file, ask if user wants to create it with option y/n
