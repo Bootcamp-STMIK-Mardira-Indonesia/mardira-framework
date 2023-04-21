@@ -60,11 +60,12 @@ class CreateRouteCommand extends Command
         // remove any = from parameter name
         $parameter = str_replace('=', '', $parameter);
         // if method is not set, ask user to set it
-        if (!$name) {
+        $methodName = strpos($name, ':') !== false ? '' : $name;
+        if (!$name || strpos($name, ':') !== false) {
             $infoText = "Method is not set. Please type method name: ";
             $yellowText = "\033[33m" . $infoText . "\033[0m";
-            $name = $this->ask($yellowText);
-            if ($name == '') {
+            $methodName = $this->ask($yellowText);
+            if ($methodName == '') {
                 $infoText = "Method is not set, route not created.";
                 $blueText = "\033[34m" . $infoText . "\033[0m";
                 $output->writeln($blueText);
@@ -107,19 +108,30 @@ class CreateRouteCommand extends Command
             }
         }
 
-        $this->generateRoute($name, $controller, $parameter);
+        $this->generateRoute($name, $methodName, $controller, $parameter);
+
+        //
+        $splitRoute = explode('/', $name);
+        // filter splitRoute only has parameter
+        if (strpos($name, ':') !== false) {
+            $splitRoute = array_filter($splitRoute, function ($item) {
+                return strpos($item, ':') !== false;
+            });
+            // remove : and implode with comma
+            $parameter = implode(',', str_replace(':', '', $splitRoute));
+        }
 
         // if method does not exist from controller automatically create it
-        $findMethod = $this->findMethod($controller, $name, $parameter);
+        $findMethod = $this->findMethod($controller, $methodName, $parameter);
         if (!$findMethod) {
-            $infoText = "<info>Method {$name} from controller {$controller} does not exist!</info>";
+            $infoText = "<info>Method {$methodName} from controller {$controller} does not exist!</info>";
             $yellowText = "\033[33m" . $infoText . "\033[0m";
             // if its has parameter, create method with parameter method
             if ($parameter) {
-                $infoText = "Creating method {$name} with parameter {$parameter} from controller {$controller}...";
+                $infoText = "Creating method {$methodName} with parameter {$parameter} from controller {$controller}...";
                 $blueText = "\033[34m" . $infoText . "\033[0m";
             } else {
-                $infoText = "Creating method {$name} from controller {$controller}...";
+                $infoText = "Creating method {$methodName} from controller {$controller}...";
                 $blueText = "\033[34m" . $infoText . "\033[0m";
             }
             $infoText = "<info>Method created successfully.</info>";
@@ -128,7 +140,7 @@ class CreateRouteCommand extends Command
             $output->writeln($blueText);
             $output->writeln($greenText);
 
-            $this->createMethod($controller, $name, $parameter);
+            $this->createMethod($controller, $methodName, $parameter);
         }
 
         $infoText = "<info>Route created successfully.</info>";
@@ -232,11 +244,18 @@ class CreateRouteCommand extends Command
         return 'App/Routes/Api.php';
     }
 
-    protected function getReplacements($name, $controller, $parameter = null)
+    protected function getReplacements($name, $methodName, $controller, $parameter = null)
     {
         // if method is index, create route without method
         $action = $name == 'index' ? '' : '/' . $this->getAction($name);
-        // if parameter is not null, create route with parameter with {parameter}
+        // change :parameter to {parameter}
+        $splitRoute = explode('/', $action);
+        // remove only :parameter and add {}
+        $splitRoute = array_map(function ($item) {
+            return strpos($item, ':') !== false ? '{' . str_replace(':', '', $item) . '}' : $item;
+        }, $splitRoute);
+        $action = implode('/', $splitRoute);
+
         if ($parameter) {
             // if parameter is separated by comma, explode it
             if (strpos($parameter, ',') !== false) {
@@ -253,10 +272,9 @@ class CreateRouteCommand extends Command
             $dummyRoute = '/' . $this->splitNameController($controller) . $action;
         }
 
-
         return [
             'DummyRoute' => $dummyRoute,
-            'DummyAction' => $this->getAction($name),
+            'DummyAction' => $methodName,
             'DummyController' => $this->getControllerName($controller),
             'DummyNameController' => $this->splitSlashController($controller),
         ];
@@ -307,9 +325,9 @@ class CreateRouteCommand extends Command
         return ucfirst($name);
     }
 
-    protected function generateRoute($name, $controller, $parameter = null)
+    protected function generateRoute($name, $methodName, $controller, $parameter = null)
     {
-        $replacements = $this->getReplacements($name, $controller, $parameter);
+        $replacements = $this->getReplacements($name, $methodName, $controller, $parameter);
         $routeStub = $this->getRouteStub();
         $routePath = $this->getRoutePath();
 
@@ -374,11 +392,15 @@ class CreateRouteCommand extends Command
             $checkRoute = substr($checkRoute, 0, strpos($checkRoute, '});') + 3);
 
             // check action in Router::controller
-            $checkMethod = strrpos($checkRoute, $this->getAction($name));
+            $checkMethod = strrpos($checkRoute, $this->getAction($methodName));
             if (!$checkMethod) {
                 $lastMethod = strrchr($checkRoute, 'Router::');
                 // check if result string end with ->group(function () {
-                $checkGroupMethod = substr($checkRoute, -50, strpos($lastMethod, "group(function () {"));
+                $checkGroupMethod = substr($checkRoute, -48, strpos($lastMethod, "group(function () {"));
+                // if strlength is below to  43 then add string {
+                if (strlen($checkGroupMethod) < 43) {
+                    $checkGroupMethod = substr($checkRoute, -45, strpos($lastMethod, "group(function () {"));
+                }
 
                 // check if method in group controller already exists
                 if ($checkGroupMethod == "") {
@@ -388,7 +410,10 @@ class CreateRouteCommand extends Command
                         file_put_contents($routePath, $routeContent);
                     }
                 } else {
+                    // find stringlast
+
                     $lastMethod = substr($checkGroupMethod, 0, strpos($checkGroupMethod, '{') + 1);
+
 
                     $routeContent = str_replace($lastMethod, $lastMethod . PHP_EOL . "\t" . $groupStubMethodContent, $routeContent);
 
