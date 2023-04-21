@@ -377,11 +377,21 @@ class CreateRouteCommand extends Command
             $checkMethod = strrpos($checkRoute, $this->getAction($name));
             if (!$checkMethod) {
                 $lastMethod = strrchr($checkRoute, 'Router::');
-                $lastMethod = substr($lastMethod, 0, strpos($lastMethod, ');') + 2);
+                // check if result string end with ->group(function () {
+                $checkGroupMethod = substr($lastMethod, -17, strpos($lastMethod, '->group(function () {'));
 
-                if (strpos($lastMethod, str_replace(' ', "\t", $groupStubMethodContent)) === false) {
+                // check if method in group controller already exists
+                if ($checkGroupMethod == "") {
+                    $lastMethod = substr($lastMethod, 0, strpos($lastMethod, ');') + 2);
+                    if (strpos($lastMethod, str_replace(' ', "\t", $groupStubMethodContent)) === false) {
+                        $routeContent = str_replace($lastMethod, $lastMethod . PHP_EOL . "\t" . $groupStubMethodContent, $routeContent);
+                        file_put_contents($routePath, $routeContent);
+                    }
+                } else {
+                    $lastMethod = substr($checkGroupMethod, 0, strpos($checkGroupMethod, '{') + 1);
+
                     $routeContent = str_replace($lastMethod, $lastMethod . PHP_EOL . "\t" . $groupStubMethodContent, $routeContent);
-                    // tab
+
                     file_put_contents($routePath, $routeContent);
                 }
             }
