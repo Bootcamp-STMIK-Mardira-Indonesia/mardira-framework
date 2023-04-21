@@ -246,9 +246,12 @@ class CreateRouteCommand extends Command
             } else {
                 $parameter = '{' . $parameter . '}';
             }
+            $dummyRoute = '/' . $this->splitNameController($controller) . '/' . $this->getAction($name) . '/' . $parameter;
+        } else {
+            $dummyRoute = '/' . $this->splitNameController($controller) . '/' . $this->getAction($name);
         }
         return [
-            'DummyRoute' => '/' . $this->splitNameController($controller) . '/' . $this->getAction($name) . '/' . $parameter,
+            'DummyRoute' => $dummyRoute,
             'DummyAction' => $this->getAction($name),
             'DummyController' => $this->getControllerName($controller),
             'DummyNameController' => $this->splitSlashController($controller),
