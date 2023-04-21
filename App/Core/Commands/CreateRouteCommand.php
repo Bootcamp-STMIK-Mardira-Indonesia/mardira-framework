@@ -378,7 +378,7 @@ class CreateRouteCommand extends Command
             if (!$checkMethod) {
                 $lastMethod = strrchr($checkRoute, 'Router::');
                 // check if result string end with ->group(function () {
-                $checkGroupMethod = substr($lastMethod, -17, strpos($lastMethod, '->group(function () {'));
+                $checkGroupMethod = substr($checkRoute, -50, strpos($lastMethod, "group(function () {"));
 
                 // check if method in group controller already exists
                 if ($checkGroupMethod == "") {
