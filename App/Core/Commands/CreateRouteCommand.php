@@ -256,6 +256,7 @@ class CreateRouteCommand extends Command
         }, $splitRoute);
         $action = implode('/', $splitRoute);
 
+        $prefix = '/';
         if ($parameter) {
             // if parameter is separated by comma, explode it
             if (strpos($parameter, ',') !== false) {
@@ -267,9 +268,13 @@ class CreateRouteCommand extends Command
             } else {
                 $parameter = '{' . $parameter . '}';
             }
-            $dummyRoute = '/' . $this->splitNameController($controller) . $action . '/' . $parameter;
+            if (strpos($name, ':') !== false) {
+                $prefix = '';
+            }
+
+            $dummyRoute = $prefix . $this->splitNameController($controller) . $action . '/' . $parameter;
         } else {
-            $dummyRoute = '/' . $this->splitNameController($controller) . $action;
+            $dummyRoute = $prefix . $this->splitNameController($controller) . $action;
         }
 
         return [
