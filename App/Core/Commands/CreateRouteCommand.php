@@ -20,13 +20,50 @@ class CreateRouteCommand extends Command
     protected string $commandArgumentName = "name";
     protected string $commandArgumentDescription = "Name of the route";
 
-    protected string $commandOptionName = "controller";
-    protected string $commandShortOptionName = "c";
-    protected string $commandOptionDescription = 'Generate a resource controller for the given model';
-
-    protected string $commandParameterName = "parameter";
-    protected string $commandShortParameterName = "p";
-    protected string $commandParameterDescription = "Parameter of the route";
+    protected array $commandOptions = [
+        'controller' => [
+            'name' => 'controller',
+            'shortName' => 'c',
+            'input' => InputOption::VALUE_OPTIONAL,
+            'description' => 'Generate a resource controller for the given model',
+        ],
+        'parameter' => [
+            'name' => 'parameter',
+            'shortName' => 'p',
+            'input' => InputOption::VALUE_OPTIONAL,
+            'description' => 'Parameter of the route',
+        ],
+        'post' => [
+            'name' => 'post',
+            'shortName' => null,
+            'input' => InputOption::VALUE_NONE,
+            'description' => 'Create a new post route',
+        ],
+        'put' => [
+            'name' => 'put',
+            'shortName' => null,
+            'input' => InputOption::VALUE_NONE,
+            'description' => 'Create a new put route',
+        ],
+        'patch' => [
+            'name' => 'patch',
+            'shortName' => null,
+            'input' => InputOption::VALUE_NONE,
+            'description' => 'Create a new patch route',
+        ],
+        'delete' => [
+            'name' => 'delete',
+            'shortName' => null,
+            'input' => InputOption::VALUE_NONE,
+            'description' => 'Create a new delete route',
+        ],
+        'options' => [
+            'name' => 'options',
+            'shortName' => null,
+            'input' => InputOption::VALUE_NONE,
+            'description' => 'Create a new options route',
+        ],
+    ];
 
     protected function configure()
     {
@@ -36,18 +73,15 @@ class CreateRouteCommand extends Command
                 $this->commandArgumentName,
                 InputArgument::OPTIONAL,
                 $this->commandArgumentDescription
-            )
-            ->addOption(
-                $this->commandOptionName,
-                $this->commandShortOptionName,
-                InputOption::VALUE_OPTIONAL,
-                $this->commandOptionDescription
-            )->addOption(
-                $this->commandParameterName,
-                $this->commandShortParameterName,
-                InputOption::VALUE_OPTIONAL,
-                $this->commandParameterDescription
             );
+            foreach ($this->commandOptions as $option) {
+                $this->addOption(
+                    $option['name'],
+                    $option['shortName'],
+                    $option['input'],
+                    $option['description']
+                );
+            }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
