@@ -20,6 +20,15 @@ class CreateRouteCommand extends Command
     protected string $commandArgumentName = "name";
     protected string $commandArgumentDescription = "Name of the route";
 
+    protected array $methodList = [
+        'get',
+        'post',
+        'put',
+        'patch',
+        'delete',
+        'options',
+    ];
+
     protected array $commandOptions = [
         'controller' => [
             'name' => 'controller',
@@ -32,6 +41,12 @@ class CreateRouteCommand extends Command
             'shortName' => 'p',
             'input' => InputOption::VALUE_OPTIONAL,
             'description' => 'Parameter of the route',
+        ],
+        'get' => [
+            'name' => 'get',
+            'shortName' => null,
+            'input' => InputOption::VALUE_NONE,
+            'description' => 'Create a new get route',
         ],
         'post' => [
             'name' => 'post',
@@ -74,14 +89,14 @@ class CreateRouteCommand extends Command
                 InputArgument::OPTIONAL,
                 $this->commandArgumentDescription
             );
-            foreach ($this->commandOptions as $option) {
-                $this->addOption(
-                    $option['name'],
-                    $option['shortName'],
-                    $option['input'],
-                    $option['description']
-                );
-            }
+        foreach ($this->commandOptions as $option) {
+            $this->addOption(
+                $option['name'],
+                $option['shortName'],
+                $option['input'],
+                $option['description']
+            );
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -91,6 +106,7 @@ class CreateRouteCommand extends Command
         // remove any = from controller name
         $controller = str_replace('=', '', $controller);
         $parameter = $input->getOption('parameter');
+
         // remove any = from parameter name
         $parameter = str_replace('=', '', $parameter);
         // if method is not set, ask user to set it
@@ -106,6 +122,21 @@ class CreateRouteCommand extends Command
                 return;
             }
         }
+
+        $inputs = $input->getOptions();
+
+        $httpVerbs = '';
+
+        foreach ($inputs as $key => $value) {
+            if (in_array($key, $this->methodList)) {
+                if ($value) {
+                    $httpVerbs = $key;
+                }
+            }
+        }
+
+        $httpVerbs = $httpVerbs ? $httpVerbs : 'get';
+
 
         // if controller is not set, ask user to set it
         if (!$controller) {
@@ -142,7 +173,7 @@ class CreateRouteCommand extends Command
             }
         }
 
-        $this->generateRoute($name, $methodName, $controller, $parameter);
+        $this->generateRoute($name, $methodName, $controller, $parameter, $httpVerbs);
 
         //
         $splitRoute = explode('/', $name);
@@ -278,7 +309,7 @@ class CreateRouteCommand extends Command
         return 'App/Routes/Api.php';
     }
 
-    protected function getReplacements($name, $methodName, $controller, $parameter = null)
+    protected function getReplacements($name, $methodName, $controller, $parameter = null, $httpVerbs)
     {
         // if method is index, create route without method
         $action = $name == 'index' ? '' : '/' . $this->getAction($name);
@@ -316,6 +347,7 @@ class CreateRouteCommand extends Command
             'DummyAction' => $methodName,
             'DummyController' => $this->getControllerName($controller),
             'DummyNameController' => $this->splitSlashController($controller),
+            'DummyHttpVerbs' => $httpVerbs,
         ];
     }
 
@@ -364,9 +396,9 @@ class CreateRouteCommand extends Command
         return ucfirst($name);
     }
 
-    protected function generateRoute($name, $methodName, $controller, $parameter = null)
+    protected function generateRoute($name, $methodName, $controller, $parameter = null, $httpVerbs)
     {
-        $replacements = $this->getReplacements($name, $methodName, $controller, $parameter);
+        $replacements = $this->getReplacements($name, $methodName, $controller, $parameter, $httpVerbs);
         $routeStub = $this->getRouteStub();
         $routePath = $this->getRoutePath();
 
