@@ -1,1 +1,1 @@
-Router::get('DummyRoute','DummyAction');
+Router::DummyHttpVerbs('DummyRoute','DummyAction');
