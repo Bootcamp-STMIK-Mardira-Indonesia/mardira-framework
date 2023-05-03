@@ -312,7 +312,8 @@ class CreateRouteCommand extends Command
     protected function getReplacements($name, $methodName, $controller, $parameter = null, $httpVerbs)
     {
         // if method is index, create route without method
-        $action = $name == 'index' ? '' : '/' . $this->getAction($name);
+        $actionName = $name === NULL ? $methodName : $name;
+        $action = $actionName == 'index' ? '' : '/' . $this->getAction($actionName);
         // change :parameter to {parameter}
         $splitRoute = explode('/', $action);
         // remove only :parameter and add {}
