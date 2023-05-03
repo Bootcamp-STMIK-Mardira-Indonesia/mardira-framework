@@ -22,6 +22,9 @@ class CreateControllerCommand extends Command
     protected string $commandOptionName = "model";
     protected string $commandOptionDescription = 'Generate a resource controller for the given model';
 
+    protected string $commandRouteName = "route";
+    protected string $commandRouteDescription = 'Generate a route for the given controller';
+
     protected function configure()
     {
         $this->setName($this->commandName)
@@ -36,6 +39,11 @@ class CreateControllerCommand extends Command
                 null,
                 InputOption::VALUE_OPTIONAL,
                 $this->commandOptionDescription
+            )->addOption(
+                $this->commandRouteName,
+                null,
+                InputOption::VALUE_NONE,
+                $this->commandRouteDescription
             );
     }
 
@@ -72,6 +80,12 @@ class CreateControllerCommand extends Command
         if ($model) {
             $this->runCreateModelCommand($model);
         }
+
+        $inputs = $input->getOptions();
+
+        if ($inputs['route']) {
+            $this->runCreateRouteCommand($name);
+        }
     }
 
     public function ask($question)
@@ -80,6 +94,18 @@ class CreateControllerCommand extends Command
         echo $question . " ";
         $line = fgets($handle);
         return trim($line);
+    }
+
+    public function runCreateRouteCommand($name)
+    {
+        $command = $this->getApplication()->find('make:route');
+        $arguments = [
+            'command' => 'make:route',
+            '--controller' => $name,
+        ];
+        $input = new \Symfony\Component\Console\Input\ArrayInput($arguments);
+        $output = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $command->run($input, $output);
     }
 
     // method to run CreateModelCommand
