@@ -30,4 +30,20 @@ trait Responses
         echo json_encode($data);
         exit;
     }
+
+    /**
+     * Response and status code
+     *
+     * @param  mixed $code
+     * @param  mixed $data
+     * @return void
+     */
+    public static function responseWithToken(int $code = 200, $data, $token): void
+    {
+        http_response_code($code);
+        header('Content-Type: application/json');
+        header('Authorization: Bearer ' . $token);
+        echo json_encode($data);
+        exit;
+    }
 }
