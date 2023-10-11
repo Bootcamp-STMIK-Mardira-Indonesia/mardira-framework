@@ -519,6 +519,12 @@ class Blueprint
         $this->connection->exec($sql);
     }
 
+    public function dropColumn(string $column)
+    {
+        $sql = 'ALTER TABLE ' . $this->table . ' DROP COLUMN ' . $column . ';';
+        $this->connection->exec($sql);
+    }
+
     public function rename(string $table): Blueprint
     {
         $this->rename = $table;
