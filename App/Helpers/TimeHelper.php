@@ -31,4 +31,15 @@ class TimeHelper
     {
         return time() + ($days * 60 * 60 * 24);
     }
+
+    /**
+     * Set weeks
+     *
+     * @param  mixed $weeks
+     * @return int
+     */
+    public static function setWeeks(int $weeks): int
+    {
+        return time() + ($weeks * 60 * 60 * 24 * 7);
+    }
 }
