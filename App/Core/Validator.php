@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use PDO;
+
 class Validator
 {
     public static array $data = [];
@@ -29,6 +31,9 @@ class Validator
                         break;
                     case 'file':
                         self::file($field);
+                        break;
+                    case 'unique':
+                        self::unique($field);
                         break;
                 }
             }
@@ -69,6 +74,20 @@ class Validator
         if (!isset($_FILES[$field]) || !is_uploaded_file($_FILES[$field]['tmp_name'])) {
             self::addError($field, 'The ' . $field . ' field must be a valid file');
             return;
+        }
+    }
+
+    private static function unique(string $field): void
+    {
+        $table = self::$fields[$field]['table'];
+        $column = self::$fields[$field]['column'];
+        $query = "SELECT * FROM {$table} WHERE {$column} = :{$column}";
+        $statement = (new Database())->connection->prepare($query);
+        $statement->bindParam(':' . $column, self::$data[$field]);
+        $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_OBJ);
+        if ($result) {
+            self::addError($field, 'The ' . $field . ' field must be unique');
         }
     }
 
