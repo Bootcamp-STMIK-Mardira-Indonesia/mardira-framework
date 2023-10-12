@@ -87,6 +87,23 @@ class Model
         return $statement->execute();
     }
 
+    public function updateOrCreate(array $data): bool
+    {
+        $query = "INSERT INTO {$this->table} SET ";
+        $query .= implode(', ', array_map(function ($key) {
+            return $key . ' = :' . $key;
+        }, array_keys($data)));
+        $query .= " ON DUPLICATE KEY UPDATE ";
+        $query .= implode(', ', array_map(function ($key) {
+            return $key . ' = :' . $key;
+        }, array_keys($data)));
+        $statement = $this->statement->prepare($query);
+        foreach ($data as $key => $value) {
+            $statement->bindValue(':' . $key, $value);
+        }
+        return $statement->execute();
+    }
+
     public function delete(int $id): bool
     {
         $query = "DELETE FROM {$this->table} WHERE {$this->primaryKey} = :id";
