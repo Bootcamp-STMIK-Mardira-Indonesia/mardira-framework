@@ -160,7 +160,6 @@ class QueryBuilder
         return $this;
     }
 
-
     public function join(string $table, string $first, string $second, string $type = ''): QueryBuilder
     {
         $this->joins[] = [
@@ -171,6 +170,26 @@ class QueryBuilder
             'type' => $type,
         ];
         return $this;
+    }
+
+    public function leftJoin(string $table, string $first, string $second): QueryBuilder
+    {
+        return $this->join($table, $first, $second, 'LEFT');
+    }
+
+    public function rightJoin(string $table, string $first, string $second): QueryBuilder
+    {
+        return $this->join($table, $first, $second, 'RIGHT');
+    }
+
+    public function fullJoin(string $table, string $first, string $second): QueryBuilder
+    {
+        return $this->join($table, $first, $second, 'FULL');
+    }
+
+    public function innerJoin(string $table, string $first, string $second): QueryBuilder
+    {
+        return $this->join($table, $first, $second, 'INNER');
     }
 
     public function limit(int $limit): QueryBuilder
