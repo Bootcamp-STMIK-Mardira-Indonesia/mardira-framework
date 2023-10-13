@@ -35,6 +35,9 @@ class Validator
                     case 'unique':
                         self::unique($field);
                         break;
+                    case 'json':
+                        self::json($field);
+                        break;
                 }
             }
         }
@@ -74,6 +77,13 @@ class Validator
         if (!isset($_FILES[$field]) || !is_uploaded_file($_FILES[$field]['tmp_name'])) {
             self::addError($field, 'The ' . $field . ' field must be a valid file');
             return;
+        }
+    }
+
+    private static function json(string $field): void
+    {
+        if (!is_array(json_decode(self::$data[$field], true))) {
+            self::addError($field, 'The ' . $field . ' field must be a valid json');
         }
     }
 
