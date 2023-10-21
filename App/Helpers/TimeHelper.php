@@ -42,4 +42,17 @@ class TimeHelper
     {
         return time() + ($weeks * 60 * 60 * 24 * 7);
     }
+
+    
+    /**
+     * Set months
+     *
+     * @param  mixed $weeks
+     * @return int
+     */
+    
+     public static function setMonths(int $months): int
+     {
+        return time() + ($months * 60 * 60 * 24 * 30);
+     }
 }
