@@ -59,6 +59,20 @@ class Model
         return $statement->rowCount();
     }
 
+    public function where(array $data): array
+    {
+        $query = "SELECT * FROM {$this->table} WHERE ";
+        $query .= implode(' AND ', array_map(function ($key) {
+            return $key . ' = :' . $key;
+        }, array_keys($data)));
+        $statement = $this->statement->prepare($query);
+        foreach ($data as $key => $value) {
+            $statement->bindValue(':' . $key, $value);
+        }
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_OBJ);
+    }
+
     public function create(array $data): bool
     {
         $query = "INSERT INTO {$this->table} SET ";
@@ -111,4 +125,6 @@ class Model
         $statement->bindValue(':id', $id);
         return $statement->execute();
     }
+
+
 }
