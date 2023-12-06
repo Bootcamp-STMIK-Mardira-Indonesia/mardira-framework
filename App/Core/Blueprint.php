@@ -524,6 +524,19 @@ class Blueprint
         $sql = 'ALTER TABLE ' . $this->table . ' DROP COLUMN ' . $column . ';';
         $this->connection->exec($sql);
     }
+
+    public function dropPrimary()
+    {
+        $sql = 'ALTER TABLE ' . $this->table . ' DROP PRIMARY KEY;';
+        $this->connection->exec($sql);
+    }
+
+    public function dropForeign()
+    {
+        $sql = 'ALTER TABLE ' . $this->table . ' DROP FOREIGN KEY ' . $this->foreign . ';';
+        $this->connection->exec($sql);
+    }
+
     public function addColumn(string $column)
     {
         $sql = 'ALTER TABLE ' . $this->table . ' ADD COLUMN ' . $column . ';';
