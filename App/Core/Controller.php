@@ -40,4 +40,17 @@ class Controller
         $model = 'App\\Models\\' . $model;
         return new $model;
     }
+
+    /**
+     * load middleware
+     *
+     * @param  mixed $middleware
+     * @return void
+     */
+
+    public function middleware(string $middleware)
+    {
+        $middleware = 'App\\Middlewares\\' . $middleware;
+        return new $middleware;
+    }
 }
