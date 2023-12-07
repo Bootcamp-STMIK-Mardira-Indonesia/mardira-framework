@@ -33,6 +33,19 @@ class Request
         return $body;
     }
 
+    public function file(): array
+    {
+        $file = [];
+
+        if ($this->method() === 'POST') {
+            foreach ($_FILES as $key => $value) {
+                $file[$key] = $value;
+            }
+        }
+
+        return $file;
+    }
+
     public static function bearerToken(): string
     {
         $headers = getallheaders();
@@ -50,5 +63,5 @@ class Request
     {
         return $this->body()[$key] ?? '';
     }
-    
+
 }
