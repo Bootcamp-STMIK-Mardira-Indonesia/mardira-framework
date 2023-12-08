@@ -228,6 +228,20 @@ class QueryBuilder
         }
     }
 
+    public function insertGetId(array $data): int
+    {
+        $columns = implode(', ', array_keys($data));
+        $values = implode(', ', array_map(function ($column) {
+            return ':' . $column;
+        }, array_keys($data)));
+        $query = "INSERT INTO {$this->table} ({$columns}) VALUES ({$values})";
+        $statement = $this->connection->prepare($query);
+        foreach ($data as $key => $value) {
+            $statement->bindValue(':' . $key, $value);
+        }
+        $statement->execute();
+        return (int)$this->connection->lastInsertId();
+    }
 
     public function get(): array
     {
