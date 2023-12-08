@@ -73,6 +73,21 @@ class Model
         return $statement->fetchAll(PDO::FETCH_OBJ);
     }
 
+    public function whereIn(string $column, array $data): array
+    {
+        $query = "SELECT * FROM {$this->table} WHERE {$column} IN (";
+        $query .= implode(', ', array_map(function ($key) {
+            return ':' . $key;
+        }, array_keys($data)));
+        $query .= ")";
+        $statement = $this->statement->prepare($query);
+        foreach ($data as $key => $value) {
+            $statement->bindValue(':' . $key, $value);
+        }
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_OBJ);
+    }
+
     public function whereNotIn(string $column, array $data): array
     {
         $query = "SELECT * FROM {$this->table} WHERE {$column} NOT IN (";
