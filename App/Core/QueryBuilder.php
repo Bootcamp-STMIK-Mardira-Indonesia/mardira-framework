@@ -18,6 +18,7 @@ class QueryBuilder
     protected array $order = [];
     protected int $limit = 0;
     protected array $groupBy = [];
+    protected array $having = [];
 
     public function __construct()
     {
@@ -133,6 +134,16 @@ class QueryBuilder
     public function groupBy(string $column): QueryBuilder
     {
         $this->groupBy[] = $column;
+        return $this;
+    }
+
+    public function having(string $column, $value, string $operator = '='): QueryBuilder
+    {
+        $this->having[] = [
+            'column' => $column,
+            'value' => $value,
+            'operator' => $operator,
+        ];
         return $this;
     }
 
@@ -361,6 +372,16 @@ class QueryBuilder
 
         if ($this->limit > 0) {
             $query .= " LIMIT {$this->limit}";
+        }
+
+        if (count($this->having) > 0) {
+            $query .= ' HAVING ';
+            foreach ($this->having as $key => $having) {
+                $query .= "{$having['column']} {$having['operator']} :{$having['column']}";
+                if ($key < count($this->having) - 1) {
+                    $query .= ' AND ';
+                }
+            }
         }
 
         return $query;
